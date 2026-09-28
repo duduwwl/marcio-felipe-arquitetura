@@ -52,9 +52,9 @@
     .nav-cta:hover { background: var(--paper); color: var(--ink); }
 
     .hero { min-height: 100svh; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; padding: 8.5rem var(--pad) 2.5rem; }
-    .hero-media { position: absolute; inset: -3%; z-index: -2; overflow: hidden; transform: scale(1.06); animation: heroIn 1.7s var(--ease) forwards; background: #0a1420; }
+    .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0a1420; }
     .hero-fallback, .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .hero-fallback { object-fit: cover; object-position: center; transform: scale(1.08); animation: fallbackPan 24s ease-in-out infinite alternate; }
+    .hero-fallback { object-fit: cover; object-position: center; }
     .hero-canvas { opacity: 0; transition: opacity .8s ease; }
     .hero-canvas.ready { opacity: 1; }
     .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,12,.66) 0%, rgba(10,12,12,.08) 68%), linear-gradient(0deg, rgba(8,9,8,.62), transparent 54%); }
@@ -152,9 +152,7 @@
 
     [data-reveal] { opacity: 0; transform: translateY(2.2rem); transition: opacity .8s var(--ease), transform .8s var(--ease); }
     [data-reveal].visible { opacity: 1; transform: none; }
-    @keyframes heroIn { to { transform: scale(1); } }
     @keyframes lineUp { to { transform: none; } }
-    @keyframes fallbackPan { 0% { transform: scale(1.16) translate3d(-3.4%,0,0); } 100% { transform: scale(1.16) translate3d(3.4%,-.5%,0); } }
     @media (max-width: 1100px) {
       .intro-layout { grid-template-columns: minmax(15rem,.7fr) 1.3fr; gap: 3rem; }
       .intro h2 { font-size: clamp(2.7rem,5.4vw,4.6rem); }
@@ -433,7 +431,6 @@
       precision highp float;
       uniform sampler2D u_image;
       uniform float u_time;
-      uniform float u_pan;
       uniform float u_scene;
       uniform vec2 u_view;
       uniform vec2 u_image_size;
@@ -457,10 +454,9 @@
         if (viewAspect > imageAspect) cover.y = imageAspect / viewAspect;
         else cover.x = viewAspect / imageAspect;
 
-        // A janela ampliada cria espaço real para o giro panorâmico de 24 s.
-        vec2 sampleWindow = cover * 0.84;
+        // Enquadramento fixo: a arquitetura nunca muda de posição ou escala.
+        vec2 sampleWindow = cover;
         vec2 uv = (v_uv - 0.5) * sampleWindow + 0.5;
-        uv.x += (u_pan - 0.5) * (1.0 - sampleWindow.x) * 0.94;
         vec2 point = vec2(uv.x, 1.0 - uv.y);
         vec3 original = texture2D(u_image, uv).rgb;
         float isHero = step(0.5, u_scene);
@@ -485,7 +481,11 @@
         float vegetationRegion = mix(projectVegetation, heroVegetation, isHero);
         float green = smoothstep(-0.04, 0.12, original.g - original.b) *
           (1.0 - smoothstep(0.10, 0.31, original.r - original.g));
-        float foliage = vegetationRegion * green * (1.0 - water);
+        // A construção é uma zona protegida: portas, cobertura, paredes e interiores ficam rígidos.
+        float heroStructure = softBox(point, vec2(0.22, 0.24), vec2(1.00, 0.655), 0.012);
+        float projectStructure = softBox(point, vec2(0.07, 0.15), vec2(0.99, 0.72), 0.014);
+        float structure = mix(projectStructure, heroStructure, isHero);
+        float foliage = vegetationRegion * green * (1.0 - water) * (1.0 - structure);
 
         // Céu com limite inclinado para não tocar na cobertura.
         float skyLimit = mix(0.47, 0.23, smoothstep(0.30, 0.78, point.x));
@@ -494,10 +494,17 @@
         float breeze = sin(u_time * 0.78 + point.y * 18.0) +
           sin(u_time * 1.17 + point.x * 15.0) * 0.48;
         vec2 motion = vec2(0.0);
+        // Ondulação localizada: desloca somente os pixels dentro da piscina.
+        motion.x += water * sin(point.y * 94.0 + u_time * 1.35) * 0.00135;
+        motion.y += water * (
+          sin(point.x * 116.0 + u_time * 1.8) * 0.00115 +
+          sin(point.x * 47.0 - u_time * 1.05) * 0.00065
+        );
         motion.x += foliage * breeze * 0.0037;
         motion.y += foliage * sin(u_time * 0.63 + point.x * 13.0) * 0.00135;
-        motion.x += clouds * (sin(u_time * 0.22 + point.y * 5.0) * 0.0055 + sin(u_time * 0.12) * 0.0022);
-        motion.y += clouds * sin(u_time * 0.16 + point.x * 3.0) * 0.0008;
+        // Movimento de nuvens deliberadamente leve e lento.
+        motion.x += clouds * (sin(u_time * 0.16 + point.y * 5.0) * 0.0016 + sin(u_time * 0.08) * 0.0007);
+        motion.y += clouds * sin(u_time * 0.11 + point.x * 3.0) * 0.00035;
 
         vec3 color = texture2D(u_image, clamp(uv + motion, 0.002, 0.998)).rgb;
         float rippleA = sin(point.x * 118.0 + u_time * 2.25 + sin(point.y * 38.0));
@@ -557,7 +564,6 @@
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
       const timeLocation = gl.getUniformLocation(program, 'u_time');
-      const panLocation = gl.getUniformLocation(program, 'u_pan');
       const viewLocation = gl.getUniformLocation(program, 'u_view');
       gl.uniform1i(gl.getUniformLocation(program, 'u_image'), 0);
       gl.uniform1f(gl.getUniformLocation(program, 'u_scene'), isHero ? 1 : 0);
@@ -585,10 +591,7 @@
         if (!visible || document.hidden || motionPreference.matches) { running = false; return; }
         if (needsResize) resize();
         const elapsed = now - startedAt;
-        const cycle = (elapsed / 24000) % 1;
-        const rotation = 0.5 - 0.5 * Math.cos(cycle * Math.PI * 2);
         gl.uniform1f(timeLocation, elapsed / 1000);
-        gl.uniform1f(panLocation, isHero ? 0.06 + rotation * 0.88 : 0.22 + rotation * 0.56);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         canvas.classList.add('ready');
         canvas.dataset.animated = 'true';
