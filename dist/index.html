@@ -464,7 +464,7 @@
         // Máscara recuada para dentro da piscina: borda, piso e encontro com o jardim ficam rígidos.
         float waterTop = 0.68 + point.x * 0.07;
         float water = isHero *
-          smoothstep(waterTop + 0.025, waterTop + 0.075, point.y) *
+          smoothstep(waterTop + 0.050, waterTop + 0.105, point.y) *
           insideEdge(point, vec2(0.975, 0.715), vec2(0.975, 0.99), 0.035) *
           insideEdge(point, vec2(0.975, 0.99), vec2(0.025, 0.99), 0.035) *
           insideEdge(point, vec2(0.025, 0.99), vec2(0.025, 0.715), 0.035);
@@ -486,7 +486,7 @@
         float heroStructure = softBox(point, vec2(0.22, 0.24), vec2(1.00, 0.655), 0.012);
         float projectStructure = softBox(point, vec2(0.07, 0.15), vec2(0.99, 0.72), 0.014);
         float structure = mix(projectStructure, heroStructure, isHero);
-        float poolEdgeProtection = mix(1.0, smoothstep(0.022, 0.055, abs(point.y - waterTop)), isHero);
+        float poolEdgeProtection = mix(1.0, smoothstep(0.040, 0.095, abs(point.y - waterTop)), isHero);
         float foliage = vegetationRegion * green * (1.0 - water) * (1.0 - structure) * poolEdgeProtection;
 
         // Céu com limite inclinado para não tocar na cobertura.
@@ -496,12 +496,8 @@
         float breeze = sin(u_time * 0.78 + point.y * 18.0) +
           sin(u_time * 1.17 + point.x * 15.0) * 0.48;
         vec2 motion = vec2(0.0);
-        // Ondulação localizada: desloca somente os pixels dentro da piscina.
-        motion.x += water * sin(point.y * 94.0 + u_time * 1.35) * 0.00135;
-        motion.y += water * (
-          sin(point.x * 116.0 + u_time * 1.8) * 0.00115 +
-          sin(point.x * 47.0 - u_time * 1.05) * 0.00065
-        );
+        // A água não desloca a textura: o movimento vem apenas de luz e reflexos,
+        // garantindo que nenhuma parte da borda seja deformada.
         motion.x += foliage * breeze * 0.0037;
         motion.y += foliage * sin(u_time * 0.63 + point.x * 13.0) * 0.00135;
         // Movimento de nuvens deliberadamente leve e lento.
