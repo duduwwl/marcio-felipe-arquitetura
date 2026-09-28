@@ -461,12 +461,13 @@
         vec3 original = texture2D(u_image, uv).rgb;
         float isHero = step(0.5, u_scene);
 
-        // Máscara da piscina: só a luz e o reflexo se movem; bordas ficam firmes.
+        // Máscara recuada para dentro da piscina: borda, piso e encontro com o jardim ficam rígidos.
+        float waterTop = 0.68 + point.x * 0.07;
         float water = isHero *
-          insideEdge(point, vec2(0.02, 0.64), vec2(0.98, 0.64), 0.045) *
-          insideEdge(point, vec2(0.98, 0.64), vec2(0.98, 0.99), 0.035) *
-          insideEdge(point, vec2(0.98, 0.99), vec2(0.02, 0.99), 0.035) *
-          insideEdge(point, vec2(0.02, 0.99), vec2(0.02, 0.64), 0.035);
+          smoothstep(waterTop + 0.025, waterTop + 0.075, point.y) *
+          insideEdge(point, vec2(0.975, 0.715), vec2(0.975, 0.99), 0.035) *
+          insideEdge(point, vec2(0.975, 0.99), vec2(0.025, 0.99), 0.035) *
+          insideEdge(point, vec2(0.025, 0.99), vec2(0.025, 0.715), 0.035);
 
         // Vegetação: regiões laterais e canteiros, filtradas pela cor verde.
         float heroVegetation = clamp(
@@ -485,7 +486,8 @@
         float heroStructure = softBox(point, vec2(0.22, 0.24), vec2(1.00, 0.655), 0.012);
         float projectStructure = softBox(point, vec2(0.07, 0.15), vec2(0.99, 0.72), 0.014);
         float structure = mix(projectStructure, heroStructure, isHero);
-        float foliage = vegetationRegion * green * (1.0 - water) * (1.0 - structure);
+        float poolEdgeProtection = mix(1.0, smoothstep(0.022, 0.055, abs(point.y - waterTop)), isHero);
+        float foliage = vegetationRegion * green * (1.0 - water) * (1.0 - structure) * poolEdgeProtection;
 
         // Céu com limite inclinado para não tocar na cobertura.
         float skyLimit = mix(0.47, 0.23, smoothstep(0.30, 0.78, point.x));
