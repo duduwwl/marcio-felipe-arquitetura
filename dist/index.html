@@ -65,8 +65,8 @@
     .eyebrow::before { content: ""; width: 2.1rem; height: 1px; background: var(--copper-soft); }
     .hero h1 { max-width: 13ch; margin: clamp(1.35rem,3vh,2rem) 0 0; font-family: "Jost", sans-serif; font-size: clamp(2.65rem,5.1vw,5.2rem); font-weight: 200; line-height: .96; letter-spacing: -.035em; }
     .reveal-line { display: block; overflow: hidden; }
-    .reveal-line span { display: block; transform: translateY(110%); animation: lineUp 1s var(--ease) forwards; }
-    .reveal-line:nth-child(2) span { animation-delay: .15s; color: var(--copper-soft); }
+    .reveal-line > span { display: block; }
+    .reveal-line:nth-child(2) > span { color: var(--copper-soft); }
     .hero-aside { display: grid; justify-items: start; }
     .text-link { display: inline-flex; align-items: center; gap: 1.2rem; padding-bottom: .65rem; border-bottom: 1px solid currentColor; font-weight: 400; letter-spacing: .02em; }
     .text-link i { font-style: normal; transition: transform .35s var(--ease); }
@@ -132,7 +132,7 @@
     .contact h2 { max-width: 12ch; }
     .contact h2 em { color: var(--copper-soft); font-style: normal; }
     .contact-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 3rem; }
-    .button { display: inline-flex; align-items: center; justify-content: space-between; min-width: 14rem; gap: 2rem; padding: 1rem 1.15rem; border: 1px solid rgba(255,255,255,.5); transition: background .3s, color .3s; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-width: 14rem; padding: 1rem 1.15rem; border: 1px solid rgba(255,255,255,.5); transition: background .3s, color .3s; }
     .button.primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
     .button:hover { background: var(--copper-soft); color: var(--ink); border-color: var(--copper-soft); }
     .contact-meta { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2rem; margin-top: 7rem; padding-top: 1.8rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
@@ -151,9 +151,13 @@
     .modal-copy p { color: var(--muted); }
     .modal-signature { color: var(--copper-soft); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; }
 
+    .text-effect-word { display: inline-block; overflow: hidden; vertical-align: bottom; margin-bottom: -.1em; padding-bottom: .1em; }
+    .text-effect-word > span { display: inline-block; }
+    .text-effect-enhanced .text-effect-word > span { opacity: 0; transform: translate3d(0,112%,0); transition: opacity .72s var(--ease), transform .82s var(--ease); transition-delay: calc(var(--word-index) * 42ms); will-change: transform, opacity; }
+    .text-effect-enhanced.text-effect-visible .text-effect-word > span { opacity: 1; transform: translate3d(0,0,0); }
+
     [data-reveal] { opacity: 0; transform: translateY(2.2rem); transition: opacity .8s var(--ease), transform .8s var(--ease); }
     [data-reveal].visible { opacity: 1; transform: none; }
-    @keyframes lineUp { to { transform: none; } }
     @media (max-width: 1100px) {
       .intro-layout { grid-template-columns: minmax(15rem,.7fr) 1.3fr; gap: 3rem; }
       .intro h2 { font-size: clamp(2.7rem,5.4vw,4.6rem); }
@@ -201,6 +205,7 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
       [data-reveal] { opacity: 1; transform: none; }
+      .text-effect-enhanced .text-effect-word > span { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -321,12 +326,12 @@
         <div class="section-label">Contato</div>
         <h2 data-reveal>Vamos criar algo que tenha a <em>sua identidade?</em></h2>
         <div class="contact-actions" data-reveal>
-          <a class="button primary" href="https://wa.me/5535999351307" target="_blank" rel="noreferrer">Conversar no WhatsApp <span>↗</span></a>
-          <a class="button" href="https://www.instagram.com/arquitettomarcio/" target="_blank" rel="noreferrer">Ver Instagram <span>↗</span></a>
+          <a class="button primary" href="https://wa.me/5535999351307" target="_blank" rel="noreferrer">Conversar no WhatsApp</a>
+          <a class="button" href="https://www.instagram.com/arquitettomarcio/" target="_blank" rel="noreferrer">Ver Instagram</a>
         </div>
       </div>
       <div class="contact-meta">
-        <div><strong>Márcio Felipe</strong>Arquitetura + Interiores</div>
+        <div><strong>Márcio Felipe</strong></div>
         <div><strong>Visite</strong>Rua Firmino Sales, 96<br>Centro</div>
         <div><strong>Fale conosco</strong><a href="tel:+5535999351307">(35) 99935-1307</a></div>
       </div>
@@ -393,6 +398,69 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeProject(); });
 
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Versão nativa do preset "slide" do TextEffect: revela cada palavra
+    // individualmente, sem exigir React e preservando toda a marcação semântica.
+    const textEffectTargets = document.querySelectorAll([
+      'h1',
+      'main h2',
+      'main h3',
+      '.section-label',
+      '.intro-copy p',
+      '.portfolio-head > p',
+      '.service p',
+      '.process-top > p',
+      '.process-step p',
+      '.project-type',
+      '.project-source',
+      '.architect-caption',
+      '.contact-meta > div'
+    ].join(','));
+
+    function enhanceTextEffect(element) {
+      let wordIndex = 0;
+      function wrapTextNodes(node) {
+        Array.from(node.childNodes).forEach(child => {
+          if (child.nodeType === Node.TEXT_NODE && /\S/.test(child.textContent)) {
+            const fragment = document.createDocumentFragment();
+            child.textContent.split(/(\s+)/).forEach(token => {
+              if (!token) return;
+              if (/^\s+$/.test(token)) {
+                fragment.appendChild(document.createTextNode(token));
+                return;
+              }
+              const clip = document.createElement('span');
+              const word = document.createElement('span');
+              clip.className = 'text-effect-word';
+              clip.style.setProperty('--word-index', wordIndex++);
+              word.textContent = token;
+              clip.appendChild(word);
+              fragment.appendChild(clip);
+            });
+            child.replaceWith(fragment);
+          } else if (child.nodeType === Node.ELEMENT_NODE && !child.matches('br, script, style')) {
+            wrapTextNodes(child);
+          }
+        });
+      }
+      wrapTextNodes(element);
+      if (wordIndex) element.classList.add('text-effect-enhanced');
+    }
+
+    textEffectTargets.forEach(enhanceTextEffect);
+    if (motionPreference.matches) {
+      textEffectTargets.forEach(element => element.classList.add('text-effect-visible'));
+    } else {
+      const textEffectObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('text-effect-visible');
+          textEffectObserver.unobserve(entry.target);
+        });
+      }, { threshold: .12, rootMargin: '0px 0px -5% 0px' });
+      textEffectTargets.forEach(element => textEffectObserver.observe(element));
+    }
+
     if (window.gsap && window.ScrollTrigger && !motionPreference.matches) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.utils.toArray('.project img:not([data-cinematic-image])').forEach(image => {
