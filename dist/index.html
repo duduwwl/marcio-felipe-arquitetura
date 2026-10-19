@@ -135,11 +135,26 @@
     .contact-meta strong { display: block; margin-bottom: .45rem; color: var(--paper); font-weight: 500; }
     .footer { display: flex; justify-content: space-between; gap: 2rem; padding: 1.2rem var(--pad); border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
 
-    .modal { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 1.5rem; background: rgba(10,10,8,.92); opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s; }
+    .modal { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 1.5rem; background: rgba(10,10,8,.92); opacity: 0; visibility: hidden; transition: opacity .32s var(--ease), visibility .32s var(--ease); overscroll-behavior: contain; }
     .modal.open { opacity: 1; visibility: visible; }
-    .modal-inner { width: min(92rem,100%); max-height: 90svh; display: grid; grid-template-columns: 1.6fr .65fr; background: #201f1b; transform: translateY(1.5rem); transition: transform .45s var(--ease); overflow: hidden; }
+    .modal-inner { width: min(92rem,100%); max-height: 90svh; display: grid; grid-template-columns: 1.6fr .65fr; background: #201f1b; transform: translateY(1.5rem); transition: transform .32s var(--ease); overflow: hidden; }
     .modal.open .modal-inner { transform: none; }
-    .modal img { height: 74svh; object-fit: cover; }
+    .modal-media { position: relative; min-width: 0; background: #0d0d0b; overflow: hidden; touch-action: pan-y; }
+    .modal img { height: 74svh; object-fit: contain; opacity: 1; transition: opacity .2s var(--ease); user-select: none; }
+    .modal img.is-changing { opacity: 0; }
+    .carousel-control { position: absolute; z-index: 2; top: 50%; display: none; place-items: center; width: 3.25rem; height: 3.25rem; padding: 0; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; background: rgba(15,15,13,.58); color: white; font-size: 1.35rem; cursor: pointer; transform: translateY(-50%); backdrop-filter: blur(8px); transition: background-color .12s var(--ease), border-color .12s var(--ease), transform .12s var(--ease); }
+    .modal.has-gallery .carousel-control { display: grid; }
+    .carousel-control:hover { background: var(--copper); border-color: var(--copper); }
+    .carousel-control:active { transform: translateY(-50%) scale(.96); }
+    .carousel-control:focus-visible, .gallery-dot:focus-visible, .modal-close:focus-visible { outline: 2px solid var(--copper-soft); outline-offset: 3px; }
+    .carousel-prev { left: 1.1rem; }
+    .carousel-next { right: 1.1rem; }
+    .gallery-meta { position: absolute; z-index: 2; left: 50%; bottom: 1rem; display: none; align-items: center; gap: .9rem; padding: .6rem .8rem; border: 1px solid rgba(255,255,255,.25); background: rgba(15,15,13,.65); color: white; transform: translateX(-50%); backdrop-filter: blur(8px); }
+    .modal.has-gallery .gallery-meta { display: flex; }
+    .gallery-count { min-width: 2.8rem; font-size: .68rem; letter-spacing: .14em; }
+    .gallery-dots { display: flex; align-items: center; gap: .42rem; }
+    .gallery-dot { width: .42rem; height: .42rem; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.4); cursor: pointer; transition: background-color .12s var(--ease), transform .12s var(--ease); }
+    .gallery-dot[aria-current="true"] { background: var(--copper-soft); transform: scale(1.35); }
     .modal-copy { padding: clamp(1.5rem,3vw,3.2rem); display: flex; flex-direction: column; justify-content: space-between; }
     .modal-close { align-self: flex-end; width: 2.8rem; height: 2.8rem; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: white; cursor: pointer; }
     .modal-copy small { color: var(--copper-soft); letter-spacing: .18em; text-transform: uppercase; }
@@ -182,6 +197,7 @@
       .modal-inner { grid-template-columns: 1fr; overflow-y: auto; }
       .modal img { height: 48svh; }
       .modal-copy { min-height: 18rem; }
+      .carousel-control { width: 3rem; height: 3rem; }
     }
     @media (max-width: 520px) {
       :root { --pad: 1.15rem; }
@@ -272,8 +288,8 @@
         <div class="project-info"><div><span class="project-type">Projeto residencial</span><h3>Residência Contemporânea</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
       </article>
       <div class="project-duo">
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Casa Integrada" data-title="Casa Integrada" data-type="Arquitetura e interiores" data-description="Ambientes sociais, fachada e circulação foram concebidos como uma experiência contínua, com luz natural, paisagismo e desenho limpo." data-image="assets/projeto-casa-integrada-hq.png">
-          <img src="assets/projeto-casa-integrada-hq.png" alt="Fachada e jardim da Casa Integrada de Márcio Felipe" loading="lazy">
+        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Casa Integrada" data-title="Casa Integrada" data-type="Arquitetura e interiores" data-description="Fachada contemporânea, paisagismo tropical e interiores luminosos compõem uma residência de linhas precisas, materiais naturais e iluminação acolhedora." data-image="assets/casa-integrada-01.jpg" data-images="assets/casa-integrada-01.jpg|assets/casa-integrada-02.jpg|assets/casa-integrada-03.jpg|assets/casa-integrada-04.jpg" data-alts="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical|Fachada noturna da Casa Integrada com iluminação arquitetônica|Suíte da Casa Integrada com madeira, tons claros e iluminação indireta|Suíte da Casa Integrada com marcenaria clara, cortinas e piso de madeira">
+          <img src="assets/casa-integrada-01.jpg" alt="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical" width="1600" height="893" loading="lazy">
           <div class="project-info"><div><span class="project-type">Arquitetura e interiores</span><h3>Casa Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
         <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Sala Luz" data-title="Sala Luz" data-type="Interiores e iluminação" data-description="Madeira escura, pedra natural, mobiliário de desenho orgânico e uma tela luminosa no teto criam uma atmosfera sofisticada e acolhedora." data-image="assets/projeto-sala-luz.jpg">
@@ -337,7 +353,15 @@
 
   <div class="modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-inner">
-      <img id="modal-image" src="assets/projeto-fachada-real.jpg" alt="">
+      <div class="modal-media" id="modal-media">
+        <img id="modal-image" src="assets/projeto-fachada-real.jpg" alt="" draggable="false">
+        <button class="carousel-control carousel-prev" type="button" aria-label="Imagem anterior">←</button>
+        <button class="carousel-control carousel-next" type="button" aria-label="Próxima imagem">→</button>
+        <div class="gallery-meta">
+          <span class="gallery-count" id="gallery-count" role="status" aria-live="polite"></span>
+          <div class="gallery-dots" id="gallery-dots" aria-label="Selecionar imagem do projeto"></div>
+        </div>
+      </div>
       <div class="modal-copy">
         <button class="modal-close" type="button" aria-label="Fechar projeto">×</button>
         <div><small id="modal-type"></small><h3 id="modal-title"></h3><p id="modal-description"></p></div>
@@ -356,8 +380,17 @@
     const modalType = document.getElementById('modal-type');
     const modalTitle = document.getElementById('modal-title');
     const modalDescription = document.getElementById('modal-description');
+    const modalMedia = document.getElementById('modal-media');
+    const previousImageButton = modal.querySelector('.carousel-prev');
+    const nextImageButton = modal.querySelector('.carousel-next');
+    const galleryCount = document.getElementById('gallery-count');
+    const galleryDots = document.getElementById('gallery-dots');
     const closeButton = modal.querySelector('.modal-close');
     let lastFocus = null;
+    let galleryImages = [];
+    let galleryAlts = [];
+    let galleryIndex = 0;
+    let pointerStartX = null;
 
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -366,13 +399,42 @@
     }, { threshold: .15 });
     revealItems.forEach(el => observer.observe(el));
 
+    function renderGalleryImage(index) {
+      if (!galleryImages.length) return;
+      galleryIndex = (index + galleryImages.length) % galleryImages.length;
+      modalImage.classList.add('is-changing');
+      modalImage.src = galleryImages[galleryIndex];
+      modalImage.alt = galleryAlts[galleryIndex] || modalTitle.textContent;
+      galleryCount.textContent = `${String(galleryIndex + 1).padStart(2, '0')} / ${String(galleryImages.length).padStart(2, '0')}`;
+      galleryDots.querySelectorAll('.gallery-dot').forEach((dot, dotIndex) => {
+        dot.setAttribute('aria-current', dotIndex === galleryIndex ? 'true' : 'false');
+      });
+      requestAnimationFrame(() => requestAnimationFrame(() => modalImage.classList.remove('is-changing')));
+    }
+
+    function prepareGallery(project) {
+      galleryImages = (project.dataset.images || project.dataset.image).split('|').filter(Boolean);
+      galleryAlts = (project.dataset.alts || project.querySelector('img').alt).split('|');
+      galleryIndex = 0;
+      galleryDots.replaceChildren();
+      galleryImages.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'gallery-dot';
+        dot.setAttribute('aria-label', `Ver imagem ${index + 1} de ${galleryImages.length}`);
+        dot.addEventListener('click', () => renderGalleryImage(index));
+        galleryDots.appendChild(dot);
+      });
+      modal.classList.toggle('has-gallery', galleryImages.length > 1);
+      renderGalleryImage(0);
+    }
+
     function openProject(project) {
       lastFocus = document.activeElement;
-      modalImage.src = project.dataset.image;
-      modalImage.alt = project.querySelector('img').alt;
       modalType.textContent = project.dataset.type;
       modalTitle.textContent = project.dataset.title;
       modalDescription.textContent = project.dataset.description;
+      prepareGallery(project);
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
@@ -389,8 +451,24 @@
       project.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(project); } });
     });
     closeButton.addEventListener('click', closeProject);
+    previousImageButton.addEventListener('click', () => renderGalleryImage(galleryIndex - 1));
+    nextImageButton.addEventListener('click', () => renderGalleryImage(galleryIndex + 1));
+    modalMedia.addEventListener('pointerdown', event => { pointerStartX = event.clientX; });
+    modalMedia.addEventListener('pointerup', event => {
+      if (pointerStartX === null || galleryImages.length < 2) return;
+      const distance = event.clientX - pointerStartX;
+      pointerStartX = null;
+      if (Math.abs(distance) < 45) return;
+      renderGalleryImage(galleryIndex + (distance < 0 ? 1 : -1));
+    });
+    modalMedia.addEventListener('pointercancel', () => { pointerStartX = null; });
     modal.addEventListener('click', e => { if (e.target === modal) closeProject(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeProject(); });
+    document.addEventListener('keydown', e => {
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape') closeProject();
+      if (e.key === 'ArrowLeft' && galleryImages.length > 1) renderGalleryImage(galleryIndex - 1);
+      if (e.key === 'ArrowRight' && galleryImages.length > 1) renderGalleryImage(galleryIndex + 1);
+    });
 
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
