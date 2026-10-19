@@ -50,6 +50,12 @@
     .nav a:not(.nav-cta) { position: relative; color: #eee; }
     .nav a:not(.nav-cta)::after { content: ""; position: absolute; left: 0; bottom: -.4rem; width: 100%; height: 1px; background: var(--copper-soft); transform: scaleX(0); transform-origin: right; transition: transform .35s var(--ease); }
     .nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+    .nav .nav-social { display: inline-grid; place-items: center; width: 2rem; height: 2rem; color: rgba(255,255,255,.88); transition: color .25s var(--ease), transform .25s var(--ease); }
+    .nav .nav-social::after { display: none; }
+    .nav .nav-social:hover, .nav .nav-social:focus-visible { color: var(--copper-soft); transform: translateY(-2px); }
+    .nav-social svg { width: 1.2rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-social.whatsapp svg { width: 1.28rem; height: 1.28rem; }
+    .nav-social:focus-visible { outline: 1px solid var(--copper-soft); outline-offset: 3px; }
     .nav-cta { white-space: nowrap; border: 1px solid rgba(255,255,255,.55); padding: .8rem 1.05rem; transition: background .3s, color .3s; }
     .nav-cta:hover { background: var(--paper); color: var(--ink); }
 
@@ -177,7 +183,8 @@
       .service { grid-template-columns: 1fr .9fr; }
     }
     @media (max-width: 850px) {
-      .nav a:not(.nav-cta) { display: none; }
+      .nav a:not(.nav-cta):not(.nav-social) { display: none; }
+      .nav { gap: clamp(.55rem,2vw,1rem); }
       .nav-cta { padding: .65rem .75rem; font-size: .76rem; }
       .brand-monogram { font-size: 1.8rem; }
       .brand-name { font-size: .66rem; }
@@ -205,6 +212,8 @@
       .brand-name { font-size: .58rem; letter-spacing: .12em; }
       .brand-name small { font-size: .48rem; letter-spacing: .2em; }
       .nav-cta { display: none; }
+      .nav-social { width: 1.8rem; height: 1.8rem; }
+      .nav-social svg { width: 1.08rem; height: 1.08rem; }
       .hero { min-height: 100svh; padding-bottom: 1.5rem; }
       .hero-grid { gap: 1.5rem; }
       .hero h1 { font-size: clamp(2.5rem,13vw,3.4rem); }
@@ -233,6 +242,12 @@
       <a href="#escritorio">Escritório</a>
       <a href="#portfolio">Portfólio</a>
       <a href="#servicos">Serviços</a>
+      <a class="nav-social instagram" href="https://www.instagram.com/arquitettomarcio/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Márcio Felipe" title="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="nav-social whatsapp" href="https://wa.me/5535999351307" target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp" title="WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.1 8.1 0 0 1-11.9 7.1L4 20l1.2-4.1a8.1 8.1 0 1 1 15-4.2Z"/><path d="M9.1 8.8c.2-.4.4-.4.7-.4h.4c.2 0 .3.1.4.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.3.6-.1.5-.4 1-.8 1.2-.4.3-.9.4-1.5.3-1-.2-2.1-.7-3.3-1.7-1-.8-1.8-1.9-2.3-3-.3-.8-.3-1.6.1-2.2Z"/></svg>
+      </a>
       <a class="nav-cta" href="https://wa.me/5535999351307" target="_blank" rel="noreferrer">Iniciar projeto</a>
     </nav>
   </header>
@@ -302,9 +317,9 @@
           <img src="assets/residencia-essencial-01.jpg" alt="Fachada da Residência Essencial com volumes claros, madeira e paisagismo tropical" width="1376" height="768" loading="lazy">
           <div class="project-info"><div><span class="project-type">Arquitetura, interiores e paisagismo</span><h3>Residência Essencial</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Suíte Madeira" data-title="Suíte Madeira" data-type="Interiores e luminotécnica" data-description="Cores tranquilizantes, o acolhimento da madeira e pontos de luz delicados transformam a suíte em uma experiência serena." data-image="assets/projeto-suite-madeira.jpg">
-          <img src="assets/projeto-suite-madeira.jpg" alt="Suíte projetada por Márcio Felipe com teto e painéis de madeira" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Interiores e luminotécnica</span><h3>Suíte Madeira</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Academia Integrada" data-title="Academia Integrada" data-type="Arquitetura comercial e interiores" data-description="Recepção, piscina, espaços de convivência e área infantil formam uma academia luminosa e acolhedora, com madeira, concreto, vegetação e percursos claramente integrados." data-image="assets/academia-integrada-02.jpg" data-images="assets/academia-integrada-02.jpg|assets/academia-integrada-01.jpg|assets/academia-integrada-03.jpg|assets/academia-integrada-04.jpg" data-alts="Recepção da Academia Integrada junto à piscina, elevador e espaço infantil|Área de atendimento da Academia Integrada com madeira, espelho circular e vegetação|Espaço infantil da Academia Integrada com mobiliário lúdico e pintura mural|Recepção e área administrativa da Academia Integrada com vista para a piscina">
+          <img src="assets/academia-integrada-02.jpg" alt="Recepção da Academia Integrada junto à piscina, elevador e espaço infantil" width="1600" height="893" loading="lazy">
+          <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Academia Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
       </div>
     </section>
