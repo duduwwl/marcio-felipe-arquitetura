@@ -66,10 +66,10 @@
 
     .hero { min-height: 100svh; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; padding: 8.5rem var(--pad) 2.5rem; }
     .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0a1420; }
-    .hero-fallback, .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-fallback, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; }
     .hero-fallback { object-fit: cover; object-position: center; }
-    .hero-canvas { opacity: 0; transition: opacity .8s ease; }
-    .hero-canvas.ready { opacity: 1; }
+    .hero-video { z-index: 1; object-fit: cover; object-position: center; }
+    @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
     .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,12,.66) 0%, rgba(10,12,12,.08) 68%), linear-gradient(0deg, rgba(8,9,8,.62), transparent 54%); }
     .hero-grid { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 3rem; align-items: end; }
     .eyebrow { display: flex; align-items: center; gap: .75rem; text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; font-weight: 500; color: #eee; }
@@ -315,8 +315,10 @@
   <main id="conteudo">
     <section class="hero" id="inicio" aria-labelledby="hero-title">
       <div class="hero-media" data-living-scene-container aria-hidden="true">
-        <img class="hero-fallback" data-cinematic-image src="assets/hero-fachada-v2.jpg" alt="">
-        <canvas class="hero-canvas" data-living-scene aria-hidden="true"></canvas>
+        <img class="hero-fallback" src="assets/hero-fachada-v2.jpg" alt="">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/hero-fachada-v2.jpg" aria-hidden="true" tabindex="-1">
+          <source src="assets/hero-inicio.mp4" type="video/mp4">
+        </video>
       </div>
       <div class="hero-grid">
         <div>
@@ -576,6 +578,19 @@
     });
 
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const heroVideo = document.querySelector('.hero-video');
+    if (heroVideo) {
+      const syncHeroMotion = () => {
+        if (motionPreference.matches) heroVideo.pause();
+        else heroVideo.play().catch(() => {});
+      };
+      syncHeroMotion();
+      motionPreference.addEventListener('change', syncHeroMotion);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) heroVideo.pause();
+        else syncHeroMotion();
+      });
+    }
 
     // Versão nativa do preset "slide" do TextEffect: revela cada palavra
     // individualmente, sem exigir React e preservando toda a marcação semântica.
