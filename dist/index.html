@@ -68,7 +68,8 @@
     .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0a1420; }
     .hero-fallback, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; }
     .hero-fallback { object-fit: cover; object-position: center; }
-    .hero-video { z-index: 1; object-fit: cover; object-position: center; }
+    .hero-video { z-index: 1; object-fit: cover; object-position: center; display: block; }
+    @media (max-aspect-ratio: 3/2) { .hero-video { transform: scale(1.12); } }
     @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
     .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,12,.66) 0%, rgba(10,12,12,.08) 68%), linear-gradient(0deg, rgba(8,9,8,.62), transparent 54%); }
     .hero-grid { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 3rem; align-items: end; }
@@ -316,7 +317,7 @@
     <section class="hero" id="inicio" aria-labelledby="hero-title">
       <div class="hero-media" data-living-scene-container aria-hidden="true">
         <img class="hero-fallback" src="assets/hero-fachada-v2.jpg" alt="">
-        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/hero-fachada-v2.jpg" aria-hidden="true" tabindex="-1">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-fachada-v2.jpg" aria-hidden="true" tabindex="-1">
           <source src="assets/hero-inicio.mp4" type="video/mp4">
         </video>
       </div>
