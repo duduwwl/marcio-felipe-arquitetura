@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#171713">
   <meta name="description" content="Márcio Felipe — arquitetura, interiores e projetos luminotécnicos com identidade, precisão e sensibilidade.">
+  <link rel="canonical" href="https://marciofelipearquitetura.com.br/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://marciofelipearquitetura.com.br/">
+  <meta property="og:title" content="Márcio Felipe — Arquitetura & Interiores">
+  <meta property="og:description" content="Arquitetura, interiores e projetos luminotécnicos com identidade, precisão e sensibilidade.">
   <title>Márcio Felipe — Arquitetura & Interiores</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,6 +146,52 @@
     .contact-meta strong { display: block; margin-bottom: .45rem; color: var(--paper); font-weight: 500; }
     .contact-meta a:hover, .contact-meta a:focus-visible { color: var(--paper); }
     .footer { display: flex; justify-content: space-between; gap: 2rem; padding: 1.2rem var(--pad); border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
+    .footer-actions { display: flex; align-items: center; gap: 1.35rem; }
+    .admin-entry { display: inline-grid; place-items: center; width: 1.8rem; height: 1.8rem; opacity: .5; transition: opacity .2s, color .2s; }
+    .admin-entry:hover, .admin-entry:focus-visible { opacity: 1; color: var(--copper-soft); }
+    .admin-entry svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; }
+    .admin-entry:focus-visible, .admin-close:focus-visible, .admin-button:focus-visible, .project-list button:focus-visible { outline: 2px solid var(--copper-soft); outline-offset: 3px; }
+    .admin-shell { position: fixed; inset: 0; z-index: 150; display: grid; place-items: center; padding: 1rem; opacity: 0; visibility: hidden; transition: opacity .2s var(--ease), visibility .2s var(--ease); }
+    .admin-shell.open { opacity: 1; visibility: visible; }
+    .admin-backdrop { position: absolute; inset: 0; background: rgba(10,10,8,.9); backdrop-filter: blur(8px); }
+    .admin-panel { position: relative; width: min(58rem,100%); max-height: 94svh; overflow: auto; padding: clamp(1.25rem,3vw,2.5rem); background: var(--paper); color: var(--ink); box-shadow: 0 2rem 6rem rgba(0,0,0,.45); }
+    .admin-header, .admin-toolbar, .project-list-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .admin-header { padding-bottom: 1.15rem; border-bottom: 1px solid #cbc8bd; }
+    .admin-header h2 { margin: 0; font: 300 clamp(1.7rem,4vw,2.5rem)/1.05 "Jost",sans-serif; letter-spacing: -.035em; }
+    .admin-header p, .admin-note { margin: .45rem 0 0; color: #65645d; font-size: .86rem; }
+    .admin-close { width: 2.5rem; height: 2.5rem; flex: 0 0 auto; border: 1px solid #a6a398; border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.3rem; cursor: pointer; }
+    .admin-notice { margin: 1.15rem 0; padding: .8rem 1rem; border-left: 2px solid var(--copper); background: #e8e5dc; color: #4d4b44; font-size: .84rem; }
+    .admin-notice.error, .admin-status.error { border-color: #a54336; color: #8b3028; }
+    .admin-form { display: grid; gap: 1rem; margin-top: 1.25rem; }
+    [hidden] { display: none !important; }
+    .admin-form label { display: grid; gap: .4rem; font-size: .8rem; font-weight: 500; }
+    .admin-form input, .admin-form textarea { width: 100%; min-height: 2.8rem; padding: .7rem .8rem; border: 1px solid #bcb9ae; border-radius: 0; background: #fbfaf6; color: var(--ink); font: 400 .95rem "Inter Tight",sans-serif; }
+    .admin-form label span { display: inline-flex; align-items: center; gap: .5rem; }
+    .admin-form #admin-demo-mode { width: auto; min-height: 0; margin: 0; padding: 0; accent-color: var(--copper); }
+    .admin-form textarea { min-height: 8rem; resize: vertical; }
+    .admin-form input:focus, .admin-form textarea:focus { outline: 2px solid var(--copper); outline-offset: 1px; }
+    .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .admin-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-top: .25rem; }
+    .admin-button { min-height: 2.7rem; padding: .65rem 1rem; border: 1px solid #55544d; background: transparent; color: var(--ink); cursor: pointer; font: 500 .82rem "Inter Tight",sans-serif; }
+    .admin-button.primary { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+    .admin-button.danger { border-color: #a54336; color: #8b3028; }
+    .admin-button:disabled { cursor: wait; opacity: .55; }
+    .admin-toolbar { margin: 1.5rem 0 .75rem; }
+    .admin-toolbar h3 { margin: 0; font: 300 1.65rem "Jost",sans-serif; }
+    .project-list { display: grid; border-top: 1px solid #cbc8bd; }
+    .project-list-item { padding: .9rem 0; border-bottom: 1px solid #cbc8bd; }
+    .project-list-item strong { display: block; font-size: .96rem; font-weight: 500; }
+    .project-list-item small { display: block; margin-top: .2rem; color: #706f67; }
+    .project-list-actions { display: flex; flex: 0 0 auto; gap: .45rem; }
+    .project-list-actions button { min-height: 2.25rem; padding: .4rem .65rem; border: 1px solid #aaa79c; background: transparent; color: var(--ink); cursor: pointer; font: 400 .78rem "Inter Tight",sans-serif; }
+    .project-list-actions button:last-child { color: #8b3028; }
+    .gallery-order { display: grid; gap: .5rem; }
+    .gallery-order-item { display: grid; grid-template-columns: 3.5rem minmax(0,1fr) repeat(3,2rem); align-items: center; gap: .45rem; padding: .45rem; border: 1px solid #d0cdc3; }
+    .gallery-order-item img { width: 3.5rem; height: 3rem; object-fit: cover; background: #ddd; }
+    .gallery-order-item input { min-width: 0; width: 100%; min-height: 2rem; padding: .35rem; border: 1px solid #cbc8bd; background: #fbfaf6; color: var(--ink); font: .72rem "Inter Tight",sans-serif; }
+    .gallery-order-item button { width: 2rem; height: 2rem; padding: .2rem; border: 1px solid #bcb9ae; background: transparent; color: #6c6a62; cursor: pointer; }
+    .gallery-order-item button:disabled { opacity: .35; cursor: default; }
+    .admin-status { min-height: 1.4rem; color: #665f51; font-size: .82rem; }
 
     .modal { position: fixed; inset: 0; z-index: 110; display: grid; place-items: center; padding: 1.5rem; background: rgba(10,10,8,.92); opacity: 0; visibility: hidden; transition: opacity .32s var(--ease), visibility .32s var(--ease); overscroll-behavior: contain; }
     .modal.open { opacity: 1; visibility: visible; }
@@ -224,6 +275,13 @@
       .project-info { bottom: 1.5rem; gap: 1rem; }
       .project-open { font-size: .62rem; }
       .footer { flex-direction: column; }
+      .footer-actions { justify-content: space-between; }
+      .admin-form-grid { grid-template-columns: 1fr; }
+      .project-list-item { align-items: flex-start; flex-direction: column; }
+      .project-list-actions { width: 100%; }
+      .gallery-order-item { grid-template-columns: 2.8rem minmax(0,1fr) repeat(3,1.8rem); gap: .25rem; }
+      .gallery-order-item img { width: 2.8rem; }
+      .gallery-order-item button { width: 1.8rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -257,7 +315,7 @@
   <main id="conteudo">
     <section class="hero" id="inicio" aria-labelledby="hero-title">
       <div class="hero-media" data-living-scene-container aria-hidden="true">
-        <img class="hero-fallback" data-cinematic-image src="assets/hero-fachada-v2.png" alt="">
+        <img class="hero-fallback" data-cinematic-image src="assets/hero-fachada-v2.jpg" alt="">
         <canvas class="hero-canvas" data-living-scene aria-hidden="true"></canvas>
       </div>
       <div class="hero-grid">
@@ -278,7 +336,7 @@
       <div class="section-label">O escritório</div>
       <div class="intro-layout">
         <figure class="architect-card" data-reveal>
-          <img src="assets/marcio-felipe-hq.png" alt="Retrato profissional do arquiteto Márcio Felipe">
+          <img src="assets/marcio-felipe-hq.jpg" alt="Retrato profissional do arquiteto Márcio Felipe">
         </figure>
         <div>
           <h2 data-reveal>Espaços autorais, funcionais e <em>inesquecíveis.</em></h2>
@@ -324,6 +382,7 @@
           <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Academia Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
       </div>
+      <div class="project-grid" id="managed-project-grid" aria-label="Projetos adicionados pelo escritório"></div>
     </section>
 
     <section class="section services" id="servicos">
@@ -366,7 +425,32 @@
     </section>
   </main>
 
-  <footer class="footer"><span>© <span id="year"></span> MÁRCIO FELIPE ARQUITETURA</span><a href="#inicio">Voltar ao topo ↑</a></footer>
+  <footer class="footer"><span>© <span id="year"></span> MÁRCIO FELIPE ARQUITETURA</span><div class="footer-actions"><a href="#inicio">Voltar ao topo ↑</a><a href="#gerenciar" class="admin-entry" data-open-admin aria-label="Abrir gerenciamento de projetos" title="Área do arquiteto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z"/><path d="m19.1 13.8 1.1.8-1.5 2.6-1.3-.6a7.9 7.9 0 0 1-1.6.9l-.2 1.4h-3l-.3-1.4a7.9 7.9 0 0 1-1.7-.9l-1.2.6-1.5-2.6 1.1-.8a7.6 7.6 0 0 1 0-1.9l-1.1-.8 1.5-2.6 1.2.6a7.9 7.9 0 0 1 1.7-.9l.3-1.4h3l.2 1.4a7.9 7.9 0 0 1 1.6.9l1.3-.6 1.5 2.6-1.1.8a7.6 7.6 0 0 1 0 1.9Z" transform="translate(-2 -1)"/></svg></a></div></footer>
+
+  <div class="admin-shell" id="admin-shell" aria-hidden="true">
+    <div class="admin-backdrop" data-close-admin></div>
+    <section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+      <header class="admin-header"><div><h2 id="admin-title">Área do arquiteto</h2><p>Gerencie os projetos e as imagens do portfólio.</p></div><button class="admin-close" type="button" data-close-admin aria-label="Fechar gerenciamento">×</button></header>
+      <div class="admin-notice" id="admin-notice">Conectando ao banco de projetos…</div>
+      <form class="admin-form" id="admin-login-form">
+        <label><span><input type="checkbox" id="admin-demo-mode" checked> Testar somente neste navegador</span></label>
+        <div class="admin-form-grid"><label>E-mail do administrador<input type="email" id="admin-email" autocomplete="username" value="admin@marciofelipe.com" required></label><label>Senha<input type="password" id="admin-password" autocomplete="current-password" value="TesteMF2026!" required></label></div>
+        <div class="admin-actions"><button class="admin-button primary" type="submit">Entrar</button></div><p class="admin-note">A senha fictícia é apenas para testes locais. Desmarque a opção acima para entrar na conta real do Firebase e publicar alterações.</p>
+      </form>
+      <section id="admin-workspace" hidden>
+        <div class="admin-toolbar"><h3>Projetos</h3><div class="admin-actions"><button class="admin-button primary" type="button" id="new-project">Adicionar projeto</button><button class="admin-button" type="button" id="admin-logout">Sair</button></div></div>
+        <p class="admin-status" id="admin-status" role="status" aria-live="polite"></p>
+        <div class="project-list" id="project-list"></div>
+        <form class="admin-form" id="project-form" hidden>
+          <input type="hidden" id="project-id">
+          <div class="admin-form-grid"><label>Nome do projeto<input id="project-title" maxlength="100" required></label><label>Categoria / tipo<input id="project-type" maxlength="80" placeholder="Ex.: Arquitetura e interiores" required></label></div>
+          <label>Descrição<textarea id="project-description" maxlength="1200" required></textarea></label>
+          <div class="admin-form-grid"><label>Adicionar fotos<input id="project-photos" type="file" accept="image/*" multiple><small>Até 12 fotos; JPEG, PNG ou WebP; máximo de 15 MB por foto.</small></label><div><strong>Ordem das fotos</strong><div class="gallery-order" id="gallery-order"></div></div></div>
+          <div class="admin-actions"><button class="admin-button primary" type="submit">Salvar projeto</button><button class="admin-button" type="button" id="cancel-project">Cancelar</button></div>
+        </form>
+      </section>
+    </section>
+  </div>
 
   <div class="modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-inner">
@@ -391,7 +475,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script>
     const revealItems = document.querySelectorAll('[data-reveal]');
-    const projects = document.querySelectorAll('.project');
+    const portfolio = document.getElementById('portfolio');
     const modal = document.getElementById('project-modal');
     const modalImage = document.getElementById('modal-image');
     const modalType = document.getElementById('modal-type');
@@ -463,9 +547,13 @@
       document.body.classList.remove('modal-open');
       if (lastFocus) lastFocus.focus();
     }
-    projects.forEach(project => {
-      project.addEventListener('click', () => openProject(project));
-      project.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(project); } });
+    portfolio.addEventListener('click', event => {
+      const project = event.target.closest('.project');
+      if (project) openProject(project);
+    });
+    portfolio.addEventListener('keydown', event => {
+      const project = event.target.closest('.project');
+      if (project && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); openProject(project); }
     });
     closeButton.addEventListener('click', closeProject);
     previousImageButton.addEventListener('click', () => renderGalleryImage(galleryIndex - 1));
@@ -773,5 +861,6 @@
       else image.addEventListener('load', () => startLivingScene(canvas), { once: true });
     });
   </script>
+  <script type="module" src="admin.js"></script>
 </body>
 </html>

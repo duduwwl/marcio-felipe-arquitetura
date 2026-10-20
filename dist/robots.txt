@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marciofelipearquitetura.com.br/sitemap.xml

@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isMarcioAdmin() {
+      return request.auth != null
+        && request.auth.uid == 'eQVwBX6Lt1WjZRxa2NDyLW3OMWJ3';
+    }
+
+    function validProject(data) {
+      return data.keys().hasOnly([
+          'title', 'type', 'description', 'images', 'published', 'isDeleted',
+          'sortOrder', 'updatedAt', 'updatedBy'
+        ])
+        && data.keys().hasAll([
+          'title', 'type', 'description', 'images', 'published', 'isDeleted',
+          'sortOrder', 'updatedAt', 'updatedBy'
+        ])
+        && data.title is string && data.title.size() > 0 && data.title.size() <= 100
+        && data.type is string && data.type.size() > 0 && data.type.size() <= 80
+        && data.description is string && data.description.size() <= 1200
+        && data.images is list && data.images.size() > 0 && data.images.size() <= 12
+        && data.published is bool && data.isDeleted is bool
+        && data.sortOrder is int
+        && data.updatedAt is timestamp
+        && data.updatedBy == request.auth.token.email;
+    }
+
+    match /marcioFelipeProjects/{projectId} {
+      allow read: if isMarcioAdmin() || resource.data.published == true;
+      allow create, update: if isMarcioAdmin() && validProject(request.resource.data);
+      allow delete: if isMarcioAdmin();
+
+      match /images/{imageId} {
+        function parentIsPublished() {
+          return get(/databases/$(database)/documents/marcioFelipeProjects/$(projectId)).data.published == true;
+        }
+
+        function validImage(data) {
+          return data.keys().hasOnly(['data', 'alt', 'contentType'])
+            && data.keys().hasAll(['data', 'alt', 'contentType'])
+            && data.data is string && data.data.size() <= 850000
+            && data.alt is string && data.alt.size() <= 180
+            && data.contentType == 'image/webp';
+        }
+
+        allow read: if isMarcioAdmin() || parentIsPublished();
+        allow create, update: if isMarcioAdmin() && validImage(request.resource.data);
+        allow delete: if isMarcioAdmin();
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
