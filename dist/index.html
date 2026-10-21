@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#171713">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-src https://www.google.com https://www.recaptcha.net https://zoryon-web-portfolio.firebaseapp.com; frame-ancestors 'none'; script-src 'self' 'sha256-qdA5Z9FSh/PrC6mr0a77I8wbXEMZ8o0TUB2pjrkw9tE=' https://cdn.jsdelivr.net https://www.gstatic.com https://www.google.com https://www.recaptcha.net; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://firebaseappcheck.googleapis.com https://www.google.com https://www.recaptcha.net; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests">
   <meta name="description" content="Márcio Felipe — arquitetura, interiores e projetos luminotécnicos com identidade, precisão e sensibilidade.">
   <link rel="canonical" href="https://marciofelipearquitetura.com.br/">
   <meta property="og:type" content="website">
@@ -309,7 +311,7 @@
       <a class="nav-social whatsapp" href="https://wa.me/5535999351307" target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp" title="WhatsApp">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.7a8.1 8.1 0 0 1-11.9 7.1L4 20l1.2-4.1a8.1 8.1 0 1 1 15-4.2Z"/><path d="M9.1 8.8c.2-.4.4-.4.7-.4h.4c.2 0 .3.1.4.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.3.6-.1.5-.4 1-.8 1.2-.4.3-.9.4-1.5.3-1-.2-2.1-.7-3.3-1.7-1-.8-1.8-1.9-2.3-3-.3-.8-.3-1.6.1-2.2Z"/></svg>
       </a>
-      <a class="nav-cta" href="https://wa.me/5535999351307" target="_blank" rel="noreferrer">Iniciar projeto</a>
+      <a class="nav-cta" href="https://wa.me/5535999351307" target="_blank" rel="noopener noreferrer">Iniciar projeto</a>
     </nav>
   </header>
 
@@ -416,8 +418,8 @@
         <div class="section-label">Contato</div>
         <h2 data-reveal>Vamos criar algo que tenha a <em>sua identidade?</em></h2>
         <div class="contact-actions" data-reveal>
-          <a class="button primary" href="https://wa.me/5535999351307" target="_blank" rel="noreferrer">Conversar no WhatsApp</a>
-          <a class="button" href="https://www.instagram.com/arquitettomarcio/" target="_blank" rel="noreferrer">Ver Instagram</a>
+          <a class="button primary" href="https://wa.me/5535999351307" target="_blank" rel="noopener noreferrer">Conversar no WhatsApp</a>
+          <a class="button" href="https://www.instagram.com/arquitettomarcio/" target="_blank" rel="noopener noreferrer">Ver Instagram</a>
         </div>
       </div>
       <div class="contact-meta">
@@ -474,8 +476,8 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous"></script>
   <script>
     const revealItems = document.querySelectorAll('[data-reveal]');
     const portfolio = document.getElementById('portfolio');

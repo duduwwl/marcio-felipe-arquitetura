@@ -7,7 +7,7 @@ export const firebaseConfig = {
   appId: "1:477059621908:web:302069736252187b083301"
 };
 
-export const adminEmail = "dudumesquita2004@gmail.com";
+export const adminUid = "eQVwBX6Lt1WjZRxa2NDyLW3OMWJ3";
 export const projectCollection = "marcioFelipeProjects";
 export const recaptchaSiteKey = "6Lfks_gtAAAAADYHFGTEXkVa81bOHNM03ZWzklUQ";
 export const firebaseConfigured = Object.values(firebaseConfig).every(value => typeof value === "string" && value.length > 0);

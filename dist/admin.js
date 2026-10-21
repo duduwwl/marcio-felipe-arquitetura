@@ -1,4 +1,4 @@
-import { firebaseConfig, firebaseConfigured, adminEmail, projectCollection, recaptchaSiteKey } from './firebase-config.js';
+import { firebaseConfig, firebaseConfigured, adminUid, projectCollection, recaptchaSiteKey } from './firebase-config.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const shell = $('#admin-shell');
@@ -42,9 +42,18 @@ function persistLocal() {
   localStorage.setItem(LOCAL_KEY, JSON.stringify(demoRecords));
 }
 
+function isSafeImageUrl(value) {
+  if (typeof value !== 'string') return false;
+  if (/^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(value)) return value.length <= 850000;
+  return /^assets\/[A-Za-z0-9._/-]+$/.test(value) && !value.includes('..');
+}
+
 function cleanImages(images) {
-  return (images || []).filter(image => image && image.url).map(image => ({
-    id: String(image.id || ''), url: String(image.url), alt: String(image.alt || '')
+  if (!Array.isArray(images)) return [];
+  return images.slice(0, 12).filter(image => image && isSafeImageUrl(image.url)).map(image => ({
+    id: String(image.id || '').slice(0, 80),
+    url: String(image.url),
+    alt: String(image.alt || '').slice(0, 180)
   }));
 }
 
@@ -259,10 +268,10 @@ async function saveRecord(id, record) {
       return cloud.firestore.setDoc(imageRef, { data: image.url, alt: image.alt || '', contentType: 'image/webp' });
     });
     await Promise.all(imageWrites);
-    const saved = { ...fields, images: savedImages, updatedAt: cloud.firestore.serverTimestamp(), updatedBy: cloudUser.email };
+    const saved = { ...fields, images: savedImages, updatedAt: cloud.firestore.serverTimestamp(), updatedBy: cloudUser.uid };
     await cloud.firestore.setDoc(ref, saved);
     const hydratedImages = preparedImages.map(image => ({ ...image }));
-    adminRecords.set(id, { ...fields, images: hydratedImages, id, updatedBy: cloudUser.email });
+    adminRecords.set(id, { ...fields, images: hydratedImages, id, updatedBy: cloudUser.uid });
   } else {
     demoRecords[id] = { ...record, updatedAt: new Date().toISOString(), updatedBy: DEMO_EMAIL };
     persistLocal();
@@ -371,7 +380,7 @@ $('#admin-logout').addEventListener('click', async () => {
 });
 
 $('#admin-demo-mode').addEventListener('change', event => {
-  $('#admin-email').value = event.target.checked ? DEMO_EMAIL : adminEmail;
+  $('#admin-email').value = event.target.checked ? DEMO_EMAIL : '';
   $('#admin-password').value = event.target.checked ? DEMO_PASSWORD : '';
   setNotice(event.target.checked
     ? 'Demonstração local: alterações só aparecem neste navegador.'
@@ -388,7 +397,7 @@ loginForm.addEventListener('submit', async event => {
     if (!demoSession) {
       if (!cloud) throw new Error('Firebase ainda está inicializando. Tente novamente em alguns segundos.');
       const result = await cloud.auth.signInWithEmailAndPassword(cloud.auth.auth, email, password);
-      if (result.user.email !== adminEmail) { await cloud.auth.signOut(cloud.auth.auth); throw new Error(`A conta autorizada para gerenciar é ${adminEmail}.`); }
+      if (result.user.uid !== adminUid) { await cloud.auth.signOut(cloud.auth.auth); throw new Error('Esta conta não tem permissão para gerenciar o portfólio.'); }
       cloudUser = result.user;
       $('#admin-password').value = '';
       setNotice('Conectado ao Firebase. Alterações publicadas serão sincronizadas com os visitantes.');
@@ -411,7 +420,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && sh
 
 initializeBaseProjects();
 if (firebaseConfigured) {
-  $('#admin-email').value = $('#admin-demo-mode').checked ? DEMO_EMAIL : adminEmail;
+  $('#admin-email').value = $('#admin-demo-mode').checked ? DEMO_EMAIL : '';
   setNotice('Teste local disponível. Para publicar, desmarque a demonstração e entre com a conta Firebase.');
   import('https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js').then(async app => {
     const [auth, firestore, appCheck] = await Promise.all([
@@ -459,7 +468,7 @@ if (firebaseConfigured) {
     }, error => setNotice(`Falha ao ler projetos do Firebase: ${error.message}`, true));
     auth.onAuthStateChanged(authInstance, user => {
       if (unsubscribeAdmin) { unsubscribeAdmin(); unsubscribeAdmin = null; }
-      if (user?.email === adminEmail && !demoSession) {
+      if (user?.uid === adminUid && !demoSession) {
         cloudUser = user;
         loginForm.hidden = true;
         workspace.hidden = false;

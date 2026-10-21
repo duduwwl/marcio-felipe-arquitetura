@@ -19,11 +19,40 @@ service cloud.firestore {
         && data.title is string && data.title.size() > 0 && data.title.size() <= 100
         && data.type is string && data.type.size() > 0 && data.type.size() <= 80
         && data.description is string && data.description.size() <= 1200
-        && data.images is list && data.images.size() > 0 && data.images.size() <= 12
+        && validImages(data.images)
         && data.published is bool && data.isDeleted is bool
         && data.sortOrder is int
         && data.updatedAt is timestamp
-        && data.updatedBy == request.auth.token.email;
+        && data.updatedBy == request.auth.uid;
+    }
+
+    function validImageReference(image) {
+      return image is map
+        && image.keys().hasOnly(['id', 'url', 'alt'])
+        && image.keys().hasAll(['id', 'alt'])
+        && image.id is string && image.id.size() <= 80
+        && image.alt is string && image.alt.size() <= 180
+        && (!image.keys().hasAny(['url']) || (
+          image.url is string
+          && image.url.matches('^assets/[A-Za-z0-9._/-]+$')
+          && !image.url.matches('.*\\.\\..*')
+        ));
+    }
+
+    function validImages(images) {
+      return images is list && images.size() > 0 && images.size() <= 12
+        && validImageReference(images[0])
+        && (images.size() < 2 || validImageReference(images[1]))
+        && (images.size() < 3 || validImageReference(images[2]))
+        && (images.size() < 4 || validImageReference(images[3]))
+        && (images.size() < 5 || validImageReference(images[4]))
+        && (images.size() < 6 || validImageReference(images[5]))
+        && (images.size() < 7 || validImageReference(images[6]))
+        && (images.size() < 8 || validImageReference(images[7]))
+        && (images.size() < 9 || validImageReference(images[8]))
+        && (images.size() < 10 || validImageReference(images[9]))
+        && (images.size() < 11 || validImageReference(images[10]))
+        && (images.size() < 12 || validImageReference(images[11]));
     }
 
     match /marcioFelipeProjects/{projectId} {
@@ -40,6 +69,7 @@ service cloud.firestore {
           return data.keys().hasOnly(['data', 'alt', 'contentType'])
             && data.keys().hasAll(['data', 'alt', 'contentType'])
             && data.data is string && data.data.size() <= 850000
+            && data.data.matches('^data:image/webp;base64,[A-Za-z0-9+/]+=*$')
             && data.alt is string && data.alt.size() <= 180
             && data.contentType == 'image/webp';
         }

@@ -4,7 +4,7 @@
 
 O site é estático e pronto para ser servido pela hospedagem de sites Linux da Locaweb. Publique o **conteúdo** da pasta `dist/` na raiz do domínio (`public_html` em hospedagem Linux; `Web` em hospedagem Windows). Não envie esta pasta do projeto inteiro como raiz pública.
 
-Inclua todos os arquivos e subpastas de `dist/`, incluindo `assets/`, `admin.js`, `firebase-config.js`, `robots.txt` e `sitemap.xml`. O Firebase está configurado para a coleção exclusiva `marcioFelipeProjects` dentro do projeto Zoryon; nenhuma chave privada deve ser colocada no site.
+Inclua todos os arquivos e subpastas de `dist/`, incluindo o arquivo oculto `.htaccess`, `assets/`, `admin.js`, `firebase-config.js`, `robots.txt` e `sitemap.xml`. O Firebase está configurado para a coleção exclusiva `marcioFelipeProjects` dentro do projeto Zoryon; nenhuma chave privada deve ser colocada no site.
 
 ## Sequência segura para domínio
 
@@ -23,4 +23,4 @@ A conta Locaweb mostra três instalações independentes, `lovepets.app.br`, `ma
 
 ## Dependências de acesso pendentes
 
-O Firestore já contém os cinco projetos do Márcio e as regras exclusivas foram publicadas. O envio inicial dos arquivos à hospedagem Márcio terminou; ainda faltam registro do app no App Check, teste do CMS conectado, configuração DNS e teste HTTPS. Não envie senhas de Registro.br, Locaweb, Firebase ou Google nesta conversa; use diretamente as abas do navegador integrado.
+O Firestore contém os cinco projetos atuais do Márcio, inclusive as galerias revisadas da Academia Integrada e da Residência Contemporânea. O app Web está registrado no App Check/Fraud Defense e o CMS foi testado no modo local. O envio inicial à hospedagem existe, mas a versão final reforçada ainda precisa substituir os arquivos em `public_html`; depois faltam o apontamento DNS e o teste HTTPS definitivo. Não envie senhas de Registro.br, Locaweb, Firebase ou Google nesta conversa; use diretamente as abas do navegador integrado.
