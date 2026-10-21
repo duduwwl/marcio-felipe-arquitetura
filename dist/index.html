@@ -70,8 +70,7 @@
     .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0a1420; }
     .hero-fallback, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; }
     .hero-fallback { object-fit: cover; object-position: center; }
-    .hero-video { z-index: 1; object-fit: cover; object-position: center; display: block; }
-    @media (max-aspect-ratio: 3/2) { .hero-video { transform: scale(1.12); } }
+    .hero-video { z-index: 1; object-fit: cover; object-position: center; display: block; filter: saturate(1.06) contrast(1.045) brightness(1.015); image-rendering: auto; backface-visibility: hidden; }
     @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
     .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,12,.66) 0%, rgba(10,12,12,.08) 68%), linear-gradient(0deg, rgba(8,9,8,.62), transparent 54%); }
     .hero-grid { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 3rem; align-items: end; }
@@ -148,6 +147,9 @@
     .contact-meta { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2rem; margin-top: 7rem; padding-top: 1.8rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
     .contact-meta strong { display: block; margin-bottom: .45rem; color: var(--paper); font-weight: 500; }
     .contact-meta a:hover, .contact-meta a:focus-visible { color: var(--paper); }
+    .admin-text-entry { display: inline-flex; align-items: center; gap: .5rem; margin-top: .45rem; color: rgba(255,255,255,.58); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
+    .admin-text-entry::before { content: ""; width: .4rem; height: .4rem; border: 1px solid currentColor; border-radius: 50%; }
+    .admin-text-entry:hover, .admin-text-entry:focus-visible { color: var(--copper-soft); }
     .footer { display: flex; justify-content: space-between; gap: 2rem; padding: 1.2rem var(--pad); border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
     .footer-actions { display: flex; align-items: center; gap: 1.35rem; }
     .admin-entry { display: inline-grid; place-items: center; width: 1.8rem; height: 1.8rem; opacity: .5; transition: opacity .2s, color .2s; }
@@ -423,14 +425,14 @@
         </div>
       </div>
       <div class="contact-meta">
-        <div><strong>Márcio Felipe</strong></div>
+        <div><strong>Márcio Felipe</strong><a href="#gerenciar" class="admin-text-entry" data-open-admin>Área administrativa</a></div>
         <div><strong>Visite</strong><a href="https://www.bing.com/maps?&amp;mepi=0~~Embedded~Address_Link&amp;ty=18&amp;q=MF%20Arquitetura&amp;ss=ypid.YN9A033C80B9E397D6&amp;ppois=-21.239458084106445_-44.99868392944336_MF%20Arquitetura_YN9A033C80B9E397D6~&amp;cp=-21.239458~-44.998684&amp;v=2&amp;sV=1&amp;FORM=MPSRPL" target="_blank" rel="noopener noreferrer">Rua Getúlio Vargas, 100<br>sala 203, Lavras</a></div>
         <div><strong>Fale conosco</strong><a href="tel:+5535999351307">(35) 99935-1307</a></div>
       </div>
     </section>
   </main>
 
-  <footer class="footer"><span>© <span id="year"></span> MÁRCIO FELIPE ARQUITETURA</span><div class="footer-actions"><a href="#inicio">Voltar ao topo ↑</a><a href="#gerenciar" class="admin-entry" data-open-admin aria-label="Abrir gerenciamento de projetos" title="Área do arquiteto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z"/><path d="m19.1 13.8 1.1.8-1.5 2.6-1.3-.6a7.9 7.9 0 0 1-1.6.9l-.2 1.4h-3l-.3-1.4a7.9 7.9 0 0 1-1.7-.9l-1.2.6-1.5-2.6 1.1-.8a7.6 7.6 0 0 1 0-1.9l-1.1-.8 1.5-2.6 1.2.6a7.9 7.9 0 0 1 1.7-.9l.3-1.4h3l.2 1.4a7.9 7.9 0 0 1 1.6.9l1.3-.6 1.5 2.6-1.1.8a7.6 7.6 0 0 1 0 1.9Z" transform="translate(-2 -1)"/></svg></a></div></footer>
+  <footer class="footer"><span>© <span id="year"></span> MÁRCIO FELIPE ARQUITETURA</span><div class="footer-actions"><a href="#inicio">Voltar ao topo ↑</a></div></footer>
 
   <div class="admin-shell" id="admin-shell" aria-hidden="true">
     <div class="admin-backdrop" data-close-admin></div>
