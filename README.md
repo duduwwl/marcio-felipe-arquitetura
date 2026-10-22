@@ -6,7 +6,7 @@ Portfólio profissional de Márcio Felipe, com projetos de arquitetura, design d
 
 O site estático está em `dist/`. A publicação de contingência é feita pelo GitHub Pages e a hospedagem definitiva é a instalação independente do Márcio na Locaweb. Veja `LOCAWEB.md`.
 
-O painel administrativo permite testar localmente com uma senha fictícia ou gravar projetos na coleção `marcioFelipeProjects` do Firestore do projeto Firebase `zoryon-web-portfolio`. A pedido do proprietário, as coleções antigas desse banco foram excluídas em 20/10/2026. A configuração pública do app Web está em `dist/firebase-config.js`; nenhuma chave privada fica no navegador. As regras exclusivas do Márcio estão em `firestore.rules`. As fotos novas são compactadas para WebP e salvas em documentos Firestore, sem Firebase Storage.
+O painel administrativo entra com uma senha definida no Firebase Authentication e grava projetos na coleção `marcioFelipeProjects` do Firestore do projeto Firebase `zoryon-web-portfolio`. A pedido do proprietário, as coleções antigas desse banco foram excluídas em 20/10/2026. A configuração pública do app Web está em `dist/firebase-config.js`; nenhuma senha ou chave privada fica no navegador. As regras exclusivas do Márcio estão em `firestore.rules`. As fotos novas são compactadas para WebP e salvas em documentos Firestore, sem Firebase Storage.
 
 ## Segurança
 

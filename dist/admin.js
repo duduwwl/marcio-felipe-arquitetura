@@ -1,4 +1,4 @@
-import { firebaseConfig, firebaseConfigured, adminUid, projectCollection, recaptchaSiteKey } from './firebase-config.js';
+import { firebaseConfig, firebaseConfigured, adminEmail, adminUid, projectCollection, recaptchaSiteKey } from './firebase-config.js?v=20261022';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const shell = $('#admin-shell');
@@ -14,32 +14,18 @@ const titleInput = $('#project-title');
 const typeInput = $('#project-type');
 const descriptionInput = $('#project-description');
 const idInput = $('#project-id');
-const LOCAL_KEY = 'mf-portfolio-project-overrides-v1';
-const DEMO_EMAIL = 'admin@marciofelipe.com';
-const DEMO_PASSWORD = 'TesteMF2026!';
 const staticProjects = new Map();
 let cloud = null;
 let cloudUser = null;
-let demoSession = false;
 let sourceRecords = new Map();
 let adminRecords = new Map();
 let unsubscribeAdmin = null;
-let demoRecords = readLocal();
 let currentImages = [];
 let isSaving = false;
 
 function slug(value) {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 72) || `projeto-${Date.now()}`;
-}
-
-function readLocal() {
-  try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '{}'); }
-  catch { return {}; }
-}
-
-function persistLocal() {
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(demoRecords));
 }
 
 function isSafeImageUrl(value) {
@@ -81,9 +67,7 @@ function initializeBaseProjects() {
 
 function allRecords() {
   const records = new Map(staticProjects);
-  const changes = demoSession || !firebaseConfigured
-    ? new Map(Object.entries(demoRecords))
-    : (cloudUser ? adminRecords : sourceRecords);
+  const changes = cloudUser ? adminRecords : sourceRecords;
   changes.forEach((value, key) => records.set(key, { ...(records.get(key) || {}), ...value, id: key, images: cleanImages(value.images) }));
   return [...records.values()].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
@@ -130,7 +114,7 @@ function createCard(record) {
   const action = document.createElement('span');
   action.className = 'project-open';
   action.setAttribute('aria-hidden', 'true');
-  action.textContent = 'Ver projeto ↗';
+  action.textContent = 'Ver projeto';
   copy.append(category, heading, source);
   info.append(copy, action);
   card.append(image, info);
@@ -254,28 +238,24 @@ function renderList() {
 }
 
 async function saveRecord(id, record) {
-  if (firebaseConfigured && !demoSession) {
-    const ref = cloud.firestore.doc(cloud.firestore.db, projectCollection, id);
-    const { id: ignoredId, images = [], ...fields } = record;
-    const previousImageIds = new Set((recordForEditor(id)?.images || []).map(image => image.id).filter(Boolean));
-    const preparedImages = images.map(image => ({ ...image, id: image.id || (image.url?.startsWith('data:') ? crypto.randomUUID() : '') }));
-    const savedImages = preparedImages.map(image => ({
-      ...(image.url?.startsWith('data:') ? { id: image.id } : { id: image.id, url: image.url || '' }),
-      alt: image.alt || ''
-    }));
-    const imageWrites = preparedImages.filter(image => image.url?.startsWith('data:') && !previousImageIds.has(image.id)).map(image => {
-      const imageRef = cloud.firestore.doc(cloud.firestore.db, projectCollection, id, 'images', image.id);
-      return cloud.firestore.setDoc(imageRef, { data: image.url, alt: image.alt || '', contentType: 'image/webp' });
-    });
-    await Promise.all(imageWrites);
-    const saved = { ...fields, images: savedImages, updatedAt: cloud.firestore.serverTimestamp(), updatedBy: cloudUser.uid };
-    await cloud.firestore.setDoc(ref, saved);
-    const hydratedImages = preparedImages.map(image => ({ ...image }));
-    adminRecords.set(id, { ...fields, images: hydratedImages, id, updatedBy: cloudUser.uid });
-  } else {
-    demoRecords[id] = { ...record, updatedAt: new Date().toISOString(), updatedBy: DEMO_EMAIL };
-    persistLocal();
-  }
+  if (!cloud || !cloudUser || cloudUser.uid !== adminUid) throw new Error('Entre na área administrativa para salvar alterações.');
+  const ref = cloud.firestore.doc(cloud.firestore.db, projectCollection, id);
+  const { id: ignoredId, images = [], ...fields } = record;
+  const previousImageIds = new Set((recordForEditor(id)?.images || []).map(image => image.id).filter(Boolean));
+  const preparedImages = images.map(image => ({ ...image, id: image.id || (image.url?.startsWith('data:') ? crypto.randomUUID() : '') }));
+  const savedImages = preparedImages.map(image => ({
+    ...(image.url?.startsWith('data:') ? { id: image.id } : { id: image.id, url: image.url || '' }),
+    alt: image.alt || ''
+  }));
+  const imageWrites = preparedImages.filter(image => image.url?.startsWith('data:') && !previousImageIds.has(image.id)).map(image => {
+    const imageRef = cloud.firestore.doc(cloud.firestore.db, projectCollection, id, 'images', image.id);
+    return cloud.firestore.setDoc(imageRef, { data: image.url, alt: image.alt || '', contentType: 'image/webp' });
+  });
+  await Promise.all(imageWrites);
+  const saved = { ...fields, images: savedImages, updatedAt: cloud.firestore.serverTimestamp(), updatedBy: cloudUser.uid };
+  await cloud.firestore.setDoc(ref, saved);
+  const hydratedImages = preparedImages.map(image => ({ ...image }));
+  adminRecords.set(id, { ...fields, images: hydratedImages, id, updatedBy: cloudUser.uid });
   applyPublicRecords();
   renderList();
 }
@@ -354,13 +334,13 @@ projectForm.addEventListener('submit', async event => {
   const submit = $('button[type="submit"]', projectForm); submit.disabled = true; submit.textContent = 'Salvando…';
   try {
     const existingId = idInput.value;
-    const id = existingId || (firebaseConfigured && !demoSession ? cloud.firestore.doc(cloud.firestore.collection(cloud.firestore.db, projectCollection)).id : slug(title));
+    const id = existingId || cloud.firestore.doc(cloud.firestore.collection(cloud.firestore.db, projectCollection)).id;
     if (!existingId && recordForEditor(id)) throw new Error('Já existe um projeto com esse identificador. Altere o nome e tente novamente.');
     const images = await resolveNewImages(id);
     const prior = recordForEditor(id);
     const record = { title, type, description, images, published: true, isDeleted: false, sortOrder: prior?.sortOrder ?? allRecords().length };
     await saveRecord(id, record);
-    if (firebaseConfigured && !demoSession && prior) {
+    if (prior) {
       const keptIds = new Set(images.map(image => image.id).filter(Boolean));
       const orphanedIds = prior.images.map(image => image.id).filter(imageId => imageId && !keptIds.has(imageId));
       const deletions = await Promise.allSettled(orphanedIds.map(imageId => cloud.firestore.deleteDoc(cloud.firestore.doc(cloud.firestore.db, projectCollection, id, 'images', imageId))));
@@ -375,42 +355,30 @@ projectForm.addEventListener('submit', async event => {
 $('#new-project').addEventListener('click', () => showProjectForm());
 $('#cancel-project').addEventListener('click', resetForm);
 $('#admin-logout').addEventListener('click', async () => {
-  try { if (firebaseConfigured && cloudUser) await cloud.auth.signOut(cloud.auth.auth); }
-  finally { cloudUser = null; adminRecords = new Map(); demoSession = false; workspace.hidden = true; loginForm.hidden = false; $('#admin-demo-mode').checked = true; $('#admin-email').value = DEMO_EMAIL; $('#admin-password').value = DEMO_PASSWORD; setStatus(''); applyPublicRecords(); }
-});
-
-$('#admin-demo-mode').addEventListener('change', event => {
-  $('#admin-email').value = event.target.checked ? DEMO_EMAIL : '';
-  $('#admin-password').value = event.target.checked ? DEMO_PASSWORD : '';
-  setNotice(event.target.checked
-    ? 'Demonstração local: alterações só aparecem neste navegador.'
-    : 'Acesso real: use a conta administrativa cadastrada no Firebase.');
+  try { if (cloudUser) await cloud.auth.signOut(cloud.auth.auth); }
+  finally { cloudUser = null; adminRecords = new Map(); workspace.hidden = true; loginForm.hidden = false; $('#admin-password').value = ''; setStatus(''); applyPublicRecords(); }
 });
 
 loginForm.addEventListener('submit', async event => {
   event.preventDefault();
-  const email = $('#admin-email').value.trim();
   const password = $('#admin-password').value;
   const submit = $('button[type="submit"]', loginForm); submit.disabled = true;
   try {
-    demoSession = $('#admin-demo-mode').checked || !firebaseConfigured;
-    if (!demoSession) {
-      if (!cloud) throw new Error('Firebase ainda está inicializando. Tente novamente em alguns segundos.');
-      const result = await cloud.auth.signInWithEmailAndPassword(cloud.auth.auth, email, password);
-      if (result.user.uid !== adminUid) { await cloud.auth.signOut(cloud.auth.auth); throw new Error('Esta conta não tem permissão para gerenciar o portfólio.'); }
-      cloudUser = result.user;
-      $('#admin-password').value = '';
-      setNotice('Conectado ao Firebase. Alterações publicadas serão sincronizadas com os visitantes.');
-    } else {
-      if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) throw new Error('No modo de demonstração, use o e-mail e senha de teste preenchidos.');
-      setNotice('Modo de demonstração: mudanças ficam apenas neste navegador. Para publicar, saia e desmarque a opção de teste antes de entrar.');
-    }
+    if (!cloud) throw new Error('A autenticação ainda está iniciando. Tente novamente em alguns segundos.');
+    const result = await cloud.auth.signInWithEmailAndPassword(cloud.auth.auth, adminEmail, password);
+    if (result.user.uid !== adminUid) { await cloud.auth.signOut(cloud.auth.auth); throw new Error('Acesso não autorizado.'); }
+    cloudUser = result.user;
+    $('#admin-password').value = '';
+    setNotice('Conectado ao Firebase. As alterações serão publicadas no portfólio.');
     loginForm.hidden = true;
     workspace.hidden = false;
     renderList();
     applyPublicRecords();
-    setStatus(demoSession ? 'Sessão de demonstração iniciada.' : 'Conectado. Adicione ou edite projetos.');
-  } catch (error) { demoSession = false; setStatus(error.message || 'Falha no login.', true); }
+    setStatus('Conectado. Adicione ou edite projetos.');
+  } catch (error) {
+    $('#admin-password').value = '';
+    setStatus(error.code?.startsWith('auth/') ? 'Senha incorreta ou acesso não autorizado.' : (error.message || 'Falha no login.'), true);
+  }
   finally { submit.disabled = false; }
 });
 
@@ -420,8 +388,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && sh
 
 initializeBaseProjects();
 if (firebaseConfigured) {
-  $('#admin-email').value = $('#admin-demo-mode').checked ? DEMO_EMAIL : '';
-  setNotice('Teste local disponível. Para publicar, desmarque a demonstração e entre com a conta Firebase.');
+  setNotice('Entre com a senha administrativa para gerenciar os projetos.');
   import('https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js').then(async app => {
     const [auth, firestore, appCheck] = await Promise.all([
       import('https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js'),
@@ -434,6 +401,7 @@ if (firebaseConfigured) {
       isTokenAutoRefreshEnabled: true
     });
     const authInstance = auth.getAuth(firebaseApp);
+    await auth.setPersistence(authInstance, auth.inMemoryPersistence);
     const db = firestore.getFirestore(firebaseApp);
     cloud = { app, auth: { ...auth, auth: authInstance }, firestore: { ...firestore, db } };
     const projectRef = firestore.collection(db, projectCollection);
@@ -468,7 +436,7 @@ if (firebaseConfigured) {
     }, error => setNotice(`Falha ao ler projetos do Firebase: ${error.message}`, true));
     auth.onAuthStateChanged(authInstance, user => {
       if (unsubscribeAdmin) { unsubscribeAdmin(); unsubscribeAdmin = null; }
-      if (user?.uid === adminUid && !demoSession) {
+      if (user?.uid === adminUid) {
         cloudUser = user;
         loginForm.hidden = true;
         workspace.hidden = false;
@@ -487,6 +455,7 @@ if (firebaseConfigured) {
     });
   }).catch(error => setNotice(`Firebase não pôde iniciar. Confira a configuração e as regras: ${error.message}`, true));
 } else {
-  setNotice('Modo local de demonstração. O Firebase ainda não foi configurado; as alterações não são compartilhadas entre dispositivos.');
+  setNotice('A área administrativa está indisponível. Verifique a configuração do Firebase.', true);
+  $('button[type="submit"]', loginForm).disabled = true;
   applyPublicRecords();
 }

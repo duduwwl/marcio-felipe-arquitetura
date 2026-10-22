@@ -175,7 +175,6 @@
     .admin-form label { display: grid; gap: .4rem; font-size: .8rem; font-weight: 500; }
     .admin-form input, .admin-form textarea { width: 100%; min-height: 2.8rem; padding: .7rem .8rem; border: 1px solid #bcb9ae; border-radius: 0; background: #fbfaf6; color: var(--ink); font: 400 .95rem "Inter Tight",sans-serif; }
     .admin-form label span { display: inline-flex; align-items: center; gap: .5rem; }
-    .admin-form #admin-demo-mode { width: auto; min-height: 0; margin: 0; padding: 0; accent-color: var(--copper); }
     .admin-form textarea { min-height: 8rem; resize: vertical; }
     .admin-form input:focus, .admin-form textarea:focus { outline: 2px solid var(--copper); outline-offset: 1px; }
     .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -346,7 +345,7 @@
       <div class="section-label">O escritório</div>
       <div class="intro-layout">
         <figure class="architect-card" data-reveal>
-          <img src="assets/marcio-felipe-retrato-janelas.jpg" alt="Retrato de Márcio Felipe sentado junto à janela, com uma xícara de café">
+          <img src="assets/marcio-felipe-retrato-janelas.jpg" alt="Retrato de Márcio Felipe sentado junto à janela, com uma xícara de café" loading="lazy" decoding="async">
         </figure>
         <div>
           <h2 data-reveal>Espaços autorais, funcionais e <em>inesquecíveis.</em></h2>
@@ -368,28 +367,28 @@
       </div>
 
       <article class="project" data-living-scene-container tabindex="0" role="button" aria-label="Ampliar projeto Residência Contemporânea" data-title="Residência Contemporânea" data-type="Arquitetura residencial e interiores" data-description="Volumes marcantes, grandes esquadrias e paisagismo tropical integram os ambientes sociais a uma área externa acolhedora, com piscina, madeira e luz natural." data-image="assets/residencia-contemporanea-01.jpg" data-images="assets/residencia-contemporanea-01.jpg|assets/residencia-contemporanea-02.jpg|assets/residencia-contemporanea-03.jpg|assets/residencia-contemporanea-04.jpg|assets/residencia-contemporanea-05.jpg" data-alts="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical|Fachada posterior da residência com piscina, grandes esquadrias e jardim tropical|Área externa com piscina integrada à fachada contemporânea e ao paisagismo|Sala de estar ampla com marcenaria em madeira, iluminação indireta e mobiliário contemporâneo|Cozinha integrada com ilha em pedra, marcenaria em madeira e iluminação acolhedora">
-        <img data-cinematic-image src="assets/residencia-contemporanea-01.jpg" alt="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical">
+        <img data-cinematic-image src="assets/residencia-contemporanea-01.jpg" alt="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical" loading="lazy" decoding="async">
         <canvas class="project-canvas" data-living-scene data-scene="project" aria-hidden="true"></canvas>
-        <div class="project-info"><div><span class="project-type">Projeto residencial</span><h3>Residência Contemporânea</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+        <div class="project-info"><div><span class="project-type">Projeto residencial</span><h3>Residência Contemporânea</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
       </article>
       <div class="project-duo">
         <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Casa Integrada" data-title="Casa Integrada" data-type="Arquitetura e interiores" data-description="Fachada contemporânea, paisagismo tropical e interiores luminosos compõem uma residência de linhas precisas, materiais naturais e iluminação acolhedora." data-image="assets/casa-integrada-01.jpg" data-images="assets/casa-integrada-01.jpg|assets/casa-integrada-02.jpg|assets/casa-integrada-03.jpg|assets/casa-integrada-04.jpg" data-alts="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical|Fachada noturna da Casa Integrada com iluminação arquitetônica|Suíte da Casa Integrada com madeira, tons claros e iluminação indireta|Suíte da Casa Integrada com marcenaria clara, cortinas e piso de madeira">
           <img src="assets/casa-integrada-01.jpg" alt="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical" width="1600" height="893" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura e interiores</span><h3>Casa Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+          <div class="project-info"><div><span class="project-type">Arquitetura e interiores</span><h3>Casa Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
         </article>
         <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Sala Luz" data-title="Sala Luz" data-type="Arquitetura, interiores e iluminação" data-description="Volumes arquitetônicos marcantes e uma suíte de atmosfera serena combinam madeira, luz natural, texturas suaves e iluminação pontual em uma composição acolhedora." data-image="assets/sala-luz-03.jpg" data-images="assets/sala-luz-03.jpg|assets/sala-luz-02.jpg|assets/sala-luz-01.jpg" data-alts="Fachada contemporânea do projeto Sala Luz com concreto, madeira e paisagismo tropical|Suíte Sala Luz com marcenaria em madeira, iluminação natural e composição em tons claros|Detalhes de iluminação, marcenaria e texturas da suíte Sala Luz">
           <img src="assets/sala-luz-03.jpg" alt="Fachada contemporânea do projeto Sala Luz com concreto, madeira e paisagismo tropical" width="1194" height="1600" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e iluminação</span><h3>Sala Luz</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e iluminação</span><h3>Sala Luz</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
         </article>
       </div>
       <div class="project-grid">
         <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Residência Essencial" data-title="Residência Essencial" data-type="Arquitetura, interiores e paisagismo" data-description="Fachada de linhas horizontais, paisagismo tropical e interiores acolhedores conectam madeira, pedra, luz natural e marcenaria sob medida em uma residência integrada." data-image="assets/residencia-essencial-01.jpg" data-images="assets/residencia-essencial-01.jpg|assets/residencia-essencial-02.jpg|assets/residencia-essencial-03.jpg|assets/residencia-essencial-04.jpg|assets/residencia-essencial-05.jpg|assets/residencia-essencial-06.jpg" data-alts="Fachada da Residência Essencial com volumes claros, madeira e paisagismo tropical|Sala de estar da Residência Essencial com painéis de madeira e iluminação indireta|Detalhes da fachada, entrada e paisagismo da Residência Essencial|Suíte da Residência Essencial com marcenaria clara, madeira e iluminação aconchegante|Detalhes de decoração, iluminação e marcenaria da suíte|Banheiro da Residência Essencial revestido em pedra clara com jardim ao fundo">
           <img src="assets/residencia-essencial-01.jpg" alt="Fachada da Residência Essencial com volumes claros, madeira e paisagismo tropical" width="1376" height="768" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e paisagismo</span><h3>Residência Essencial</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e paisagismo</span><h3>Residência Essencial</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
         </article>
         <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Academia Integrada" data-title="Academia Integrada" data-type="Arquitetura comercial e interiores" data-description="Recepção, piscina, espaços de convivência e área infantil formam uma academia luminosa e acolhedora, com madeira, concreto, vegetação e percursos claramente integrados." data-image="assets/academia-integrada-08.jpg" data-images="assets/academia-integrada-08.jpg|assets/academia-integrada-05.jpg|assets/academia-integrada-06.jpg|assets/academia-integrada-01.jpg|assets/academia-integrada-02.jpg|assets/academia-integrada-09.jpg|assets/academia-integrada-03.jpg|assets/academia-integrada-04.jpg|assets/academia-integrada-07.jpg" data-alts="Fachada urbana da Academia Integrada com volumes claros, grandes esquadrias e paisagismo|Área ampla de musculação da Academia Integrada com equipamentos e iluminação natural|Área de musculação da Academia Integrada com equipamentos, piso de madeira e vegetação|Área de atendimento da Academia Integrada com madeira, espelho circular e vegetação|Recepção da Academia Integrada junto à piscina, elevador e espaço infantil|Área externa da Academia Integrada com piscina, fachada contemporânea e jardim|Espaço infantil da Academia Integrada com mobiliário lúdico e pintura mural|Recepção e área administrativa da Academia Integrada com vista para a piscina|Estúdio de pilates da Academia Integrada com equipamentos, arcos e iluminação acolhedora">
           <img src="assets/academia-integrada-08.jpg" alt="Fachada urbana da Academia Integrada com volumes claros, grandes esquadrias e paisagismo" width="1600" height="893" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Academia Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
+          <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Academia Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
         </article>
       </div>
       <div class="project-grid" id="managed-project-grid" aria-label="Projetos adicionados pelo escritório"></div>
@@ -443,9 +442,8 @@
       <header class="admin-header"><div><h2 id="admin-title">Área do arquiteto</h2><p>Gerencie os projetos e as imagens do portfólio.</p></div><button class="admin-close" type="button" data-close-admin aria-label="Fechar gerenciamento">×</button></header>
       <div class="admin-notice" id="admin-notice">Conectando ao banco de projetos…</div>
       <form class="admin-form" id="admin-login-form">
-        <label><span><input type="checkbox" id="admin-demo-mode" checked> Testar somente neste navegador</span></label>
-        <div class="admin-form-grid"><label>E-mail do administrador<input type="email" id="admin-email" autocomplete="username" value="admin@marciofelipe.com" required></label><label>Senha<input type="password" id="admin-password" autocomplete="current-password" value="TesteMF2026!" required></label></div>
-        <div class="admin-actions"><button class="admin-button primary" type="submit">Entrar</button></div><p class="admin-note">A senha fictícia é apenas para testes locais. Desmarque a opção acima para entrar na conta real do Firebase e publicar alterações.</p>
+        <label>Senha administrativa<input type="password" id="admin-password" autocomplete="current-password" required></label>
+        <div class="admin-actions"><button class="admin-button primary" type="submit">Entrar</button></div>
       </form>
       <section id="admin-workspace" hidden>
         <div class="admin-toolbar"><h3>Projetos</h3><div class="admin-actions"><button class="admin-button primary" type="button" id="new-project">Adicionar projeto</button><button class="admin-button" type="button" id="admin-logout">Sair</button></div></div>
@@ -884,6 +882,6 @@
       else image.addEventListener('load', () => startLivingScene(canvas), { once: true });
     });
   </script>
-  <script type="module" src="admin.js"></script>
+  <script type="module" src="admin.js?v=20261022"></script>
 </body>
 </html>

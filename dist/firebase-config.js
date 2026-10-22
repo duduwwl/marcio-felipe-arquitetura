@@ -8,6 +8,8 @@ export const firebaseConfig = {
 };
 
 export const adminUid = "eQVwBX6Lt1WjZRxa2NDyLW3OMWJ3";
+// Identificador de login do Firebase Auth. A senha nunca deve entrar neste arquivo.
+export const adminEmail = "dudumesquita2004@gmail.com";
 export const projectCollection = "marcioFelipeProjects";
 export const recaptchaSiteKey = "6Lfks_gtAAAAADYHFGTEXkVa81bOHNM03ZWzklUQ";
 export const firebaseConfigured = Object.values(firebaseConfig).every(value => typeof value === "string" && value.length > 0);
