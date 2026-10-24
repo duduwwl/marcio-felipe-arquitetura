@@ -67,14 +67,11 @@
     .nav-cta:hover { background: var(--paper); color: var(--ink); }
 
     .hero { min-height: 100svh; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: flex-end; padding: 8.5rem var(--pad) 2.5rem; }
-    .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #070b0d; }
+    .hero-media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0a1420; }
     .hero-fallback, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .hero-fallback { object-fit: cover; object-position: center; transform: scale(1.08); filter: blur(18px) saturate(.82) brightness(.48); }
-    .hero-video { z-index: 1; object-fit: contain; object-position: center; display: block; filter: saturate(1.06) contrast(1.045) brightness(1.015); image-rendering: auto; backface-visibility: hidden; }
-    @media (prefers-reduced-motion: reduce) {
-      .hero-video { display: none; }
-      .hero-fallback { transform: none; filter: saturate(.96) contrast(1.02) brightness(.82); }
-    }
+    .hero-fallback { object-fit: cover; object-position: center; }
+    .hero-video { z-index: 1; object-fit: cover; object-position: center; display: block; filter: saturate(1.06) contrast(1.045) brightness(1.015); image-rendering: auto; backface-visibility: hidden; }
+    @media (prefers-reduced-motion: reduce) { .hero-video { display: none; } }
     .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,12,.66) 0%, rgba(10,12,12,.08) 68%), linear-gradient(0deg, rgba(8,9,8,.62), transparent 54%); }
     .hero-grid { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 3rem; align-items: end; }
     .eyebrow { display: flex; align-items: center; gap: .75rem; text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; font-weight: 500; color: #eee; }
@@ -94,10 +91,10 @@
     .intro-layout { display: grid; grid-template-columns: .55fr 1.45fr; gap: clamp(2rem,7vw,8rem); margin-top: 4rem; }
     .architect-card { position: relative; align-self: start; width: min(100%,21rem); margin: 0; }
     .architect-card img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; filter: saturate(.9) contrast(1.02); }
-    .intro h2 { margin: 0; max-width: 15ch; font-family: "Jost", sans-serif; font-size: clamp(2.7rem,5.6vw,6rem); font-weight: 200; line-height: 1.02; letter-spacing: -.036em; }
+    .intro h2 { margin: 0; max-width: 24ch; font-family: "Jost", sans-serif; font-size: clamp(1.9rem,3.6vw,3.9rem); font-weight: 200; line-height: 1.1; letter-spacing: -.036em; }
     .intro h2 em { color: var(--copper); font-style: normal; }
-    .intro-copy { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid #c9c6bb; color: #55554f; }
-    .intro-copy p { margin: 0; max-width: 34rem; }
+    .intro-copy { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid #c9c6bb; color: #55554f; }
+    .intro-copy p { margin: 0; max-width: 34rem; text-align: justify; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; }
 
     .portfolio { padding-left: 0; padding-right: 0; }
     .portfolio-head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; padding: 0 var(--pad) 4rem; }
@@ -175,6 +172,7 @@
     .admin-form label { display: grid; gap: .4rem; font-size: .8rem; font-weight: 500; }
     .admin-form input, .admin-form textarea { width: 100%; min-height: 2.8rem; padding: .7rem .8rem; border: 1px solid #bcb9ae; border-radius: 0; background: #fbfaf6; color: var(--ink); font: 400 .95rem "Inter Tight",sans-serif; }
     .admin-form label span { display: inline-flex; align-items: center; gap: .5rem; }
+    .admin-form #admin-demo-mode { width: auto; min-height: 0; margin: 0; padding: 0; accent-color: var(--copper); }
     .admin-form textarea { min-height: 8rem; resize: vertical; }
     .admin-form input:focus, .admin-form textarea:focus { outline: 2px solid var(--copper); outline-offset: 1px; }
     .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -236,7 +234,7 @@
     [data-reveal].visible { opacity: 1; transform: none; }
     @media (max-width: 1100px) {
       .intro-layout { grid-template-columns: minmax(15rem,.7fr) 1.3fr; gap: 3rem; }
-      .intro h2 { font-size: clamp(2.7rem,5.4vw,4.6rem); }
+      .intro h2 { font-size: clamp(1.9rem,3.5vw,3.2rem); }
       .project h3 { font-size: clamp(2.4rem,5vw,4.8rem); }
       .project-grid .project h3 { font-size: clamp(2rem,3.8vw,3.4rem); }
       .service { grid-template-columns: 1fr .9fr; }
@@ -295,6 +293,20 @@
       [data-reveal] { opacity: 1; transform: none; }
       .text-effect-enhanced .text-effect-word > span { opacity: 1; transform: none; }
     }
+    /* Vídeo de abertura: sempre preenchendo o espaço, sem bordas e com o enquadramento completo (vídeo 2:1) */
+    .hero { min-height: min(100svh, 50vw); }
+    .hero-fallback, .hero-video { object-position: 72% 50%; }
+    @media (max-aspect-ratio: 1/1), (max-width: 760px) {
+      .hero { display: block; min-height: 0; padding: 0; background: var(--ink); }
+      .hero::before { display: none; }
+      .hero-media { position: relative; inset: auto; z-index: 0; width: 100%; aspect-ratio: 2 / 1; margin-top: var(--hero-header-h, 4.6rem); }
+      .hero-media::after { content: ""; position: absolute; inset: auto 0 0; height: 28%; z-index: 2; background: linear-gradient(0deg, var(--ink), transparent); pointer-events: none; }
+      .hero-fallback, .hero-video { object-position: center; }
+      .hero-grid { padding: 1.6rem var(--pad) 2.6rem; }
+      .hero h1 { margin-top: 1.1rem; }
+    }
+    @media (max-aspect-ratio: 1/1), (max-width: 760px) { :root { --hero-header-h: 5.35rem; } }
+    @media (max-width: 520px) { :root { --hero-header-h: 4rem; } }
   </style>
 </head>
 <body>
@@ -322,9 +334,9 @@
   <main id="conteudo">
     <section class="hero" id="inicio" aria-labelledby="hero-title">
       <div class="hero-media" data-living-scene-container aria-hidden="true">
-        <img class="hero-fallback" src="assets/hero-fachada-v2.jpg" alt="">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-fachada-v2.jpg" aria-hidden="true" tabindex="-1">
-          <source src="https://duduwwl.github.io/marcio-felipe-arquitetura/assets/hero-inicio.mp4" type="video/mp4">
+        <img class="hero-fallback" src="assets/hero-poster.jpg" alt="" width="1920" height="960">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-hidden="true" tabindex="-1">
+          <source src="assets/hero-video-hd.mp4" type="video/mp4">
         </video>
       </div>
       <div class="hero-grid">
@@ -345,13 +357,12 @@
       <div class="section-label">O escritório</div>
       <div class="intro-layout">
         <figure class="architect-card" data-reveal>
-          <img src="assets/marcio-felipe-retrato-janelas.jpg" alt="Retrato de Márcio Felipe sentado junto à janela, com uma xícara de café" loading="lazy" decoding="async">
+          <img src="assets/marcio-felipe-retrato-janelas.jpg" alt="Retrato de Márcio Felipe sentado junto à janela, com uma xícara de café">
         </figure>
         <div>
-          <h2 data-reveal>Espaços autorais, funcionais e <em>inesquecíveis.</em></h2>
+          <h2 data-reveal>Márcio Felipe atua na arquitetura e design de interiores, conduzindo projetos que equilibram: <em>sofisticação, personalidade e identidade.</em></h2>
           <div class="intro-copy" data-reveal>
-            <p>Márcio Felipe atua entre arquitetura e design de interiores, conduzindo projetos que equilibram proporção, materialidade e personalidade.</p>
-            <p>Cada solução é pensada de forma integrada — da fachada à atmosfera luminosa — para criar ambientes coerentes com quem vai vivê-los.</p>
+            <p>Cada solução é pensada de forma única e personalizada. Desde a fachada a cada ambiente interno e sua iluminação.</p>
           </div>
         </div>
       </div>
@@ -366,29 +377,29 @@
         <p data-reveal>Uma curadoria de atmosferas que traduzem precisão arquitetônica, conforto e presença.</p>
       </div>
 
-      <article class="project" data-living-scene-container tabindex="0" role="button" aria-label="Ampliar projeto Residência Contemporânea" data-title="Residência Contemporânea" data-type="Arquitetura residencial e interiores" data-description="Volumes marcantes, grandes esquadrias e paisagismo tropical integram os ambientes sociais a uma área externa acolhedora, com piscina, madeira e luz natural." data-image="assets/residencia-contemporanea-01.jpg" data-images="assets/residencia-contemporanea-01.jpg|assets/residencia-contemporanea-02.jpg|assets/residencia-contemporanea-03.jpg|assets/residencia-contemporanea-04.jpg|assets/residencia-contemporanea-05.jpg" data-alts="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical|Fachada posterior da residência com piscina, grandes esquadrias e jardim tropical|Área externa com piscina integrada à fachada contemporânea e ao paisagismo|Sala de estar ampla com marcenaria em madeira, iluminação indireta e mobiliário contemporâneo|Cozinha integrada com ilha em pedra, marcenaria em madeira e iluminação acolhedora">
-        <img data-cinematic-image src="assets/residencia-contemporanea-01.jpg" alt="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical" loading="lazy" decoding="async">
+      <article class="project" data-living-scene-container data-project-id="residencia-contemporanea" tabindex="0" role="button" aria-label="Ampliar projeto Residência Contemporânea" data-title="Residência Contemporânea" data-type="Arquitetura residencial e interiores" data-description="Volumes marcantes, grandes esquadrias e paisagismo tropical integram os ambientes sociais a uma área externa acolhedora, com piscina, madeira e luz natural." data-image="assets/residencia-contemporanea-01.jpg" data-images="assets/residencia-contemporanea-01.jpg|assets/residencia-contemporanea-02.jpg|assets/residencia-contemporanea-03.jpg|assets/residencia-contemporanea-04.jpg|assets/residencia-contemporanea-05.jpg" data-alts="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical|Fachada posterior da residência com piscina, grandes esquadrias e jardim tropical|Área externa com piscina integrada à fachada contemporânea e ao paisagismo|Sala de estar ampla com marcenaria em madeira, iluminação indireta e mobiliário contemporâneo|Cozinha integrada com ilha em pedra, marcenaria em madeira e iluminação acolhedora">
+        <img data-cinematic-image src="assets/residencia-contemporanea-01.jpg" alt="Fachada contemporânea com pergolado, volumes em concreto, palmeiras e paisagismo tropical">
         <canvas class="project-canvas" data-living-scene data-scene="project" aria-hidden="true"></canvas>
-        <div class="project-info"><div><span class="project-type">Projeto residencial</span><h3>Residência Contemporânea</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
+        <div class="project-info"><div><span class="project-type">Projeto residencial</span><h3>Residência Contemporânea</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
       </article>
       <div class="project-duo">
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Casa Integrada" data-title="Casa Integrada" data-type="Arquitetura e interiores" data-description="Fachada contemporânea, paisagismo tropical e interiores luminosos compõem uma residência de linhas precisas, materiais naturais e iluminação acolhedora." data-image="assets/casa-integrada-01.jpg" data-images="assets/casa-integrada-01.jpg|assets/casa-integrada-02.jpg|assets/casa-integrada-03.jpg|assets/casa-integrada-04.jpg" data-alts="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical|Fachada noturna da Casa Integrada com iluminação arquitetônica|Suíte da Casa Integrada com madeira, tons claros e iluminação indireta|Suíte da Casa Integrada com marcenaria clara, cortinas e piso de madeira">
-          <img src="assets/casa-integrada-01.jpg" alt="Fachada diurna da Casa Integrada com pedra natural, madeira e paisagismo tropical" width="1600" height="893" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura e interiores</span><h3>Casa Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
+        <article class="project" tabindex="0" role="button" data-project-id="casa-integrada" aria-label="Ampliar projeto Casa L&amp;R" data-title="Casa L&amp;R" data-type="Arquitetura e interiores" data-description="Fachada contemporânea, paisagismo tropical e interiores luminosos compõem uma residência de linhas precisas, materiais naturais e iluminação acolhedora." data-image="assets/casa-integrada-01.jpg" data-images="assets/casa-integrada-01.jpg|assets/casa-integrada-02.jpg|assets/casa-integrada-03.jpg|assets/casa-integrada-04.jpg" data-alts="Fachada diurna da Casa L&amp;R com pedra natural, madeira e paisagismo tropical|Fachada noturna da Casa L&amp;R com iluminação arquitetônica|Suíte da Casa L&amp;R com madeira, tons claros e iluminação indireta|Suíte da Casa L&amp;R com marcenaria clara, cortinas e piso de madeira">
+          <img src="assets/casa-integrada-01.jpg" alt="Fachada diurna da Casa L&amp;R com pedra natural, madeira e paisagismo tropical" width="1600" height="893" loading="lazy">
+          <div class="project-info"><div><span class="project-type">Arquitetura e interiores</span><h3>Casa L&amp;R</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Sala Luz" data-title="Sala Luz" data-type="Arquitetura, interiores e iluminação" data-description="Volumes arquitetônicos marcantes e uma suíte de atmosfera serena combinam madeira, luz natural, texturas suaves e iluminação pontual em uma composição acolhedora." data-image="assets/sala-luz-03.jpg" data-images="assets/sala-luz-03.jpg|assets/sala-luz-02.jpg|assets/sala-luz-01.jpg" data-alts="Fachada contemporânea do projeto Sala Luz com concreto, madeira e paisagismo tropical|Suíte Sala Luz com marcenaria em madeira, iluminação natural e composição em tons claros|Detalhes de iluminação, marcenaria e texturas da suíte Sala Luz">
-          <img src="assets/sala-luz-03.jpg" alt="Fachada contemporânea do projeto Sala Luz com concreto, madeira e paisagismo tropical" width="1194" height="1600" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e iluminação</span><h3>Sala Luz</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
+        <article class="project" tabindex="0" role="button" data-project-id="sala-luz" aria-label="Ampliar projeto Casa M&amp;P" data-title="Casa M&amp;P" data-type="Arquitetura, interiores e iluminação" data-description="Volumes arquitetônicos marcantes e uma suíte de atmosfera serena combinam madeira, luz natural, texturas suaves e iluminação pontual em uma composição acolhedora." data-image="assets/sala-luz-03.jpg" data-images="assets/sala-luz-03.jpg|assets/sala-luz-02.jpg|assets/sala-luz-01.jpg" data-alts="Fachada contemporânea do projeto Casa M&amp;P com concreto, madeira e paisagismo tropical|Suíte da Casa M&amp;P com marcenaria em madeira, iluminação natural e composição em tons claros|Detalhes de iluminação, marcenaria e texturas da suíte da Casa M&amp;P">
+          <img src="assets/sala-luz-03.jpg" alt="Fachada contemporânea do projeto Casa M&amp;P com concreto, madeira e paisagismo tropical" width="1194" height="1600" loading="lazy">
+          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e iluminação</span><h3>Casa M&amp;P</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
       </div>
       <div class="project-grid">
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Residência Essencial" data-title="Residência Essencial" data-type="Arquitetura, interiores e paisagismo" data-description="Fachada de linhas horizontais, paisagismo tropical e interiores acolhedores conectam madeira, pedra, luz natural e marcenaria sob medida em uma residência integrada." data-image="assets/residencia-essencial-01.jpg" data-images="assets/residencia-essencial-01.jpg|assets/residencia-essencial-02.jpg|assets/residencia-essencial-03.jpg|assets/residencia-essencial-04.jpg|assets/residencia-essencial-05.jpg|assets/residencia-essencial-06.jpg" data-alts="Fachada da Residência Essencial com volumes claros, madeira e paisagismo tropical|Sala de estar da Residência Essencial com painéis de madeira e iluminação indireta|Detalhes da fachada, entrada e paisagismo da Residência Essencial|Suíte da Residência Essencial com marcenaria clara, madeira e iluminação aconchegante|Detalhes de decoração, iluminação e marcenaria da suíte|Banheiro da Residência Essencial revestido em pedra clara com jardim ao fundo">
-          <img src="assets/residencia-essencial-01.jpg" alt="Fachada da Residência Essencial com volumes claros, madeira e paisagismo tropical" width="1376" height="768" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e paisagismo</span><h3>Residência Essencial</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
+        <article class="project" tabindex="0" role="button" data-project-id="residencia-essencial" aria-label="Ampliar projeto Reforma de Fachada L&amp;F" data-title="Reforma de Fachada L&amp;F" data-type="Arquitetura, interiores e paisagismo" data-description="Fachada de linhas horizontais, paisagismo tropical e interiores acolhedores conectam madeira, pedra, luz natural e marcenaria sob medida em uma residência integrada." data-image="assets/residencia-essencial-01.jpg" data-images="assets/residencia-essencial-01.jpg|assets/residencia-essencial-02.jpg|assets/residencia-essencial-03.jpg|assets/residencia-essencial-04.jpg|assets/residencia-essencial-05.jpg|assets/residencia-essencial-06.jpg" data-alts="Fachada da Reforma de Fachada L&amp;F com volumes claros, madeira e paisagismo tropical|Sala de estar da Reforma de Fachada L&amp;F com painéis de madeira e iluminação indireta|Detalhes da fachada, entrada e paisagismo da Reforma de Fachada L&amp;F|Suíte da Reforma de Fachada L&amp;F com marcenaria clara, madeira e iluminação aconchegante|Detalhes de decoração, iluminação e marcenaria da suíte|Banheiro da Reforma de Fachada L&amp;F revestido em pedra clara com jardim ao fundo">
+          <img src="assets/residencia-essencial-01.jpg" alt="Fachada da Reforma de Fachada L&amp;F com volumes claros, madeira e paisagismo tropical" width="1376" height="768" loading="lazy">
+          <div class="project-info"><div><span class="project-type">Arquitetura, interiores e paisagismo</span><h3>Reforma de Fachada L&amp;F</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
-        <article class="project" tabindex="0" role="button" aria-label="Ampliar projeto Academia Integrada" data-title="Academia Integrada" data-type="Arquitetura comercial e interiores" data-description="Recepção, piscina, espaços de convivência e área infantil formam uma academia luminosa e acolhedora, com madeira, concreto, vegetação e percursos claramente integrados." data-image="assets/academia-integrada-08.jpg" data-images="assets/academia-integrada-08.jpg|assets/academia-integrada-05.jpg|assets/academia-integrada-06.jpg|assets/academia-integrada-01.jpg|assets/academia-integrada-02.jpg|assets/academia-integrada-09.jpg|assets/academia-integrada-03.jpg|assets/academia-integrada-04.jpg|assets/academia-integrada-07.jpg" data-alts="Fachada urbana da Academia Integrada com volumes claros, grandes esquadrias e paisagismo|Área ampla de musculação da Academia Integrada com equipamentos e iluminação natural|Área de musculação da Academia Integrada com equipamentos, piso de madeira e vegetação|Área de atendimento da Academia Integrada com madeira, espelho circular e vegetação|Recepção da Academia Integrada junto à piscina, elevador e espaço infantil|Área externa da Academia Integrada com piscina, fachada contemporânea e jardim|Espaço infantil da Academia Integrada com mobiliário lúdico e pintura mural|Recepção e área administrativa da Academia Integrada com vista para a piscina|Estúdio de pilates da Academia Integrada com equipamentos, arcos e iluminação acolhedora">
-          <img src="assets/academia-integrada-08.jpg" alt="Fachada urbana da Academia Integrada com volumes claros, grandes esquadrias e paisagismo" width="1600" height="893" loading="lazy">
-          <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Academia Integrada</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto</span></div>
+        <article class="project" tabindex="0" role="button" data-project-id="academia-integrada" aria-label="Ampliar projeto Projetos comerciais" data-title="Projetos comerciais" data-type="Arquitetura comercial e interiores" data-description="Recepção, piscina, espaços de convivência e área infantil formam uma academia luminosa e acolhedora, com madeira, concreto, vegetação e percursos claramente integrados." data-image="assets/academia-integrada-08.jpg" data-images="assets/academia-integrada-08.jpg|assets/academia-integrada-05.jpg|assets/academia-integrada-06.jpg|assets/academia-integrada-01.jpg|assets/academia-integrada-02.jpg|assets/academia-integrada-09.jpg|assets/academia-integrada-03.jpg|assets/academia-integrada-04.jpg|assets/academia-integrada-07.jpg" data-alts="Fachada urbana do projeto comercial com volumes claros, grandes esquadrias e paisagismo|Área ampla de musculação do projeto comercial com equipamentos e iluminação natural|Área de musculação do projeto comercial com equipamentos, piso de madeira e vegetação|Área de atendimento do projeto comercial com madeira, espelho circular e vegetação|Recepção do projeto comercial junto à piscina, elevador e espaço infantil|Área externa do projeto comercial com piscina, fachada contemporânea e jardim|Espaço infantil do projeto comercial com mobiliário lúdico e pintura mural|Recepção e área administrativa do projeto comercial com vista para a piscina|Estúdio de pilates do projeto comercial com equipamentos, arcos e iluminação acolhedora">
+          <img src="assets/academia-integrada-08.jpg" alt="Fachada urbana do projeto comercial com volumes claros, grandes esquadrias e paisagismo" width="1600" height="893" loading="lazy">
+          <div class="project-info"><div><span class="project-type">Arquitetura comercial e interiores</span><h3>Projetos comerciais</h3><span class="project-source">Projeto de Márcio Felipe</span></div><span class="project-open" aria-hidden="true">Ver projeto ↗</span></div>
         </article>
       </div>
       <div class="project-grid" id="managed-project-grid" aria-label="Projetos adicionados pelo escritório"></div>
