@@ -1,4 +1,4 @@
-import { firebaseConfig, firebaseConfigured, adminEmail, adminUid, projectCollection, recaptchaSiteKey } from './firebase-config.js?v=20261022';
+import { firebaseConfig, firebaseConfigured, adminEmail, adminUid, projectCollection, recaptchaSiteKey } from './firebase-config.js?v=20261023';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const shell = $('#admin-shell');
@@ -148,6 +148,7 @@ function setStatus(message, isError = false) {
 }
 
 function openAdmin() {
+  shell._lastFocus = document.activeElement;
   shell.classList.add('open');
   shell.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
@@ -159,6 +160,18 @@ function closeAdmin() {
   shell.setAttribute('aria-hidden', 'true');
   if (!$('#project-modal')?.classList.contains('open')) document.body.classList.remove('modal-open');
   resetForm();
+  if (shell._lastFocus instanceof HTMLElement) shell._lastFocus.focus();
+}
+
+function trapAdminFocus(event) {
+  if (event.key !== 'Tab' || !shell.classList.contains('open')) return;
+  const focusable = [...shell.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    .filter(element => !element.hidden && element.getClientRects().length);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
 }
 
 function resetForm() {
@@ -262,7 +275,7 @@ async function saveRecord(id, record) {
 
 async function toggleProject(record) {
   const nextDeleted = !record.isDeleted;
-  const next = { ...record, isDeleted: nextDeleted, published: true, images: cleanImages(record.images), sortOrder: Number(record.sortOrder || 0) };
+  const next = { ...record, isDeleted: nextDeleted, published: !nextDeleted, images: cleanImages(record.images), sortOrder: Number(record.sortOrder || 0) };
   try {
     await saveRecord(record.id, next);
     setStatus(nextDeleted ? 'Projeto removido do portfólio. É possível restaurá-lo.' : 'Projeto restaurado no portfólio.');
@@ -384,7 +397,11 @@ loginForm.addEventListener('submit', async event => {
 
 document.querySelectorAll('[data-open-admin]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); openAdmin(); }));
 shell.querySelectorAll('[data-close-admin]').forEach(button => button.addEventListener('click', closeAdmin));
-document.addEventListener('keydown', event => { if (event.key === 'Escape' && shell.classList.contains('open')) closeAdmin(); });
+document.addEventListener('keydown', event => {
+  if (!shell.classList.contains('open')) return;
+  trapAdminFocus(event);
+  if (event.key === 'Escape') closeAdmin();
+});
 
 initializeBaseProjects();
 if (firebaseConfigured) {
@@ -405,7 +422,7 @@ if (firebaseConfigured) {
     const db = firestore.getFirestore(firebaseApp);
     cloud = { app, auth: { ...auth, auth: authInstance }, firestore: { ...firestore, db } };
     const projectRef = firestore.collection(db, projectCollection);
-    const projectsQuery = firestore.query(projectRef, firestore.where('published', '==', true));
+    const projectsQuery = firestore.query(projectRef, firestore.where('published', '==', true), firestore.where('isDeleted', '==', false));
     let publicSnapshotRevision = 0;
     async function hydrateSnapshot(snapshot) {
       return new Map(await Promise.all(snapshot.docs.map(async projectDoc => {

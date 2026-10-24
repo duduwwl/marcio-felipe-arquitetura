@@ -56,13 +56,16 @@ service cloud.firestore {
     }
 
     match /marcioFelipeProjects/{projectId} {
-      allow read: if isMarcioAdmin() || resource.data.published == true;
+      allow read: if isMarcioAdmin() || (
+        resource.data.published == true && resource.data.isDeleted == false
+      );
       allow create, update: if isMarcioAdmin() && validProject(request.resource.data);
       allow delete: if isMarcioAdmin();
 
       match /images/{imageId} {
         function parentIsPublished() {
-          return get(/databases/$(database)/documents/marcioFelipeProjects/$(projectId)).data.published == true;
+          let parent = get(/databases/$(database)/documents/marcioFelipeProjects/$(projectId)).data;
+          return parent.published == true && parent.isDeleted == false;
         }
 
         function validImage(data) {

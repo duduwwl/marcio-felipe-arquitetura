@@ -10,4 +10,4 @@ As regras em `firestore.rules` são exclusivas dos projetos do Márcio. `firebas
 
 O Cloud Firestore exige App Check. O app Web **Márcio Felipe Arquitetura** foi registrado no App Check com Fraud Defense/reCAPTCHA Enterprise em 20/10/2026. A chave é limitada aos domínios `marciofelipearquitetura.com.br`, `duduwwl.github.io` e `marciofelipearqu1.hospedagemdesites.ws`. Para testes em `localhost`, é preciso usar um token de depuração cadastrado no Firebase; a chave de produção não autoriza `localhost`.
 
-O público lê apenas documentos marcados `published: true`; o painel oculta aqueles com `isDeleted: true`. Por serem necessários para sobrepor projetos estáticos e permitir restauração, documentos publicados removidos continuam legíveis diretamente no Firestore. Apenas o UID acima pode criar, editar ou excluir na coleção do Márcio.
+O público lê somente documentos com `published: true` e `isDeleted: false`. Ao remover um projeto pelo painel, ele também recebe `published: false`; a restauração volta a publicar o registro. Apenas o UID acima pode criar, editar ou excluir na coleção do Márcio.
